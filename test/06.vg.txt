@@ -1,0 +1,15 @@
+# -*- mode: ruby -*-
+
+def sub()
+  # TODO
+end
+
+def main()
+  # comment in func
+  var a;
+  set a = 2;
+  var b = 1;
+  call sub();
+
+  return 42;
+end

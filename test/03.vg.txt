@@ -1,0 +1,6 @@
+# -*- mode: ruby -*-
+
+def main()
+  # comment in func
+  return 42;
+end
