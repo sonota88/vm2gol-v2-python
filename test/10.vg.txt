@@ -1,8 +1,7 @@
-# coding: utf-8
-# -*- mode: ruby -*-
+// -*- mode: javascript -*-
 
-def to_vi(w, x, y, offset)
-  var vi; # vram index
+func to_vi(w, x, y, offset) {
+  var vi; // vram index
 
   set vi = 
     ((y * w) + x)
@@ -11,67 +10,75 @@ def to_vi(w, x, y, offset)
   ;
 
   return vi;
-end
+}
 
-def vram_set(w, x, y, val)
-  var vi; # vram index
+func vram_set(w, x, y, val) {
+  var vi; // vram index
   call_set vi = to_vi(w, x, y, 0);
   set vram[vi] = val;
-end
+}
 
-def vram_set_buf(w, x, y, val)
-  var vi; # vram index
+func vram_set_buf(w, x, y, val) {
+  var vi; // vram index
   call_set  vi = to_vi(w, x, y, 25);
   set vram[vi] = val;
-end
+}
 
-def vram_get(w, x, y)
-  var vi; # vram index
+func vram_get(w, x, y) {
+  var vi; // vram index
   call_set vi = to_vi(w, x, y, 0);
   return vram[vi];
-end
+}
 
-def adjust_index(width, i)
+func adjust_index(width, i) {
   var adjusted;
 
-  case
-  when (i == -1)
-    _cmt("下限を超えた場合");
-    set adjusted = width + -1;
-  when (i == width)
-    _cmt("上限を超えた場合");
-    set adjusted = 0;
-  when (1 == 1)
-    _cmt("補正が不要な場合");
-   set adjusted = i;
-  end
+  case {
+    when (i == -1) {
+      _cmt("下限を超えた場合");
+      set adjusted = width + -1;
+    }
+    when (i == width) {
+      _cmt("上限を超えた場合");
+      set adjusted = 0;
+    }
+    when (1 == 1) {
+      _cmt("補正が不要な場合");
+     set adjusted = i;
+    }
+  }
 
   return adjusted;
-end
+}
 
-def calc_next_gen(current_val, count)
-  # 注目しているセルの次世代の生死
+func calc_next_gen(current_val, count) {
+  // 注目しているセルの次世代の生死
   var next_val = 0;
 
-  case
-  when (current_val == 0)
-    case
-    when (count == 3)
-      set next_val = 1;
-    end
-  when (0 == 0)
-    case
-    when (count == 2)
-      set next_val = 1;
-    when (count == 3)
-      set next_val = 1;
-    end
-  end
+  case {
+    when (current_val == 0) {
+      case {
+        when (count == 3) {
+          set next_val = 1;
+        }
+      }
+    }
+    when (0 == 0) {
+      case {
+        when (count == 2) {
+          set next_val = 1;
+        }
+        when (count == 3) {
+          set next_val = 1;
+        }
+      }
+    }
+  }
   
   return next_val;
-end
+}
 
-def count_alive(w, h, x, y)
+func count_alive(w, h, x, y) {
   var count = 0;
 
   var xl = x + -1;
@@ -134,21 +141,21 @@ def count_alive(w, h, x, y)
   _cmt("★count_aliveの最後");
 
   return count;
-end
+}
 
-def make_next_gen(w, h)
+func make_next_gen(w, h) {
   var x = 0;
   var y = 0;
 
   var count;
-  # 注目しているセルの現世代の生死
+  // 注目しているセルの現世代の生死
   var current_val;
-  # 注目しているセルの次世代の生死
+  // 注目しているセルの次世代の生死
   var next_val;
 
-  while (y != h)
+  while (y != h) {
     set x = 0;
-    while (x != w)
+    while (x != w) {
       call_set count = count_alive(w, h, x, y);
       _cmt("★ count_alive から戻った直後");
 
@@ -164,30 +171,30 @@ def make_next_gen(w, h)
       _cmt("★ vram_set_buf から戻った直後");
 
       set x = x + 1;
-    end
+    }
     set y = y + 1;
-  end
-end
+  }
+}
 
-def replace_with_buf()
+func replace_with_buf() {
   var vi = 0;
 
   var vi_buf;
   var temp;
 
-  while (vi != 25)
+  while (vi != 25) {
     set vi_buf = vi + 25;
     set temp = vram[vi_buf];
     set vram[vi] = temp;
     set vi = vi + 1;
-  end
-end
+  }
+}
 
-def main()
-  var w = 5; # 盤面の幅
-  var h = 5; # 盤面の高さ
+func main() {
+  var w = 5; // 盤面の幅
+  var h = 5; // 盤面の高さ
 
-  # 初期状態の設定
+  // 初期状態の設定
   call vram_set(w, 1, 0, 1);
   call vram_set(w, 2, 1, 1);
   call vram_set(w, 0, 2, 1);
@@ -196,9 +203,9 @@ def main()
 
   var gen_limit = 0;
   var gen = 1;
-  while (gen != gen_limit)
+  while (gen != gen_limit) {
     call make_next_gen(w, h);
     call replace_with_buf();
     set gen = gen + 1;
-  end
-end
+  }
+}

@@ -1,6 +1,6 @@
-# -*- mode: ruby -*-
+// -*- mode: javascript -*-
 
-def main()
-  # comment in func
+func main() {
+  // comment in func
   return 42;
-end
+}

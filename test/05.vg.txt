@@ -1,10 +1,10 @@
-# -*- mode: ruby -*-
+// -*- mode: javascript -*-
 
-def main()
-  # comment in func
+func main() {
+  // comment in func
   var a;
   set a = 2;
   var b = 1;
 
   return 42;
-end
+}

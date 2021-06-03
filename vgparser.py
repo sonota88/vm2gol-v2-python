@@ -46,9 +46,9 @@ def tokenize(src):
     pos = 0
 
     re_space = r"([ \n]+)"
-    re_comment = r"(#.*)\n"
+    re_comment = r"(//.*)\n"
     re_str = r"\"(.*)\""
-    re_reserved = r"(def|end|set|var|call_set|call|return|case|while|when|_cmt)[^a-z_]"
+    re_reserved = r"(func|set|var|call_set|call|return|case|while|when|_cmt)[^a-z_]"
     re_int = r"(-?[0-9]+)"
     re_symbol = r"(==|!=|[(){}=;+*,])"
     re_ident = r"([a-z_][a-z0-9_\[\]]*)"
@@ -151,7 +151,7 @@ class Parser:
         return args
 
     def parse_func(self):
-        self.consume("def")
+        self.consume("func")
 
         t = self.peek()
         self.pos += 1
@@ -161,8 +161,9 @@ class Parser:
         args = self.parse_args()
         self.consume(")")
 
+        self.consume("{")
         stmts = self.parse_stmts()
-        self.consume("end")
+        self.consume("}")
 
         return ["func", func_name, args, stmts]
 
@@ -315,13 +316,13 @@ class Parser:
     def parse_case(self):
         self.consume("case")
 
-        # self.consume("{")
+        self.consume("{")
 
         when_clauses = []
 
         while(True):
             t = self.peek()
-            if t.value == "end":
+            if t.value == "}":
                 break
 
             self.consume("when")
@@ -329,13 +330,13 @@ class Parser:
             expr = self.parse_expr()
             self.consume(")")
 
-            # self.consume("{")
+            self.consume("{")
             stmts = self.parse_stmts()
-            # self.consume("}")
+            self.consume("}")
 
             when_clauses.append([expr, *stmts])
 
-        self.consume("end")
+        self.consume("}")
 
         return ["case", *when_clauses]
 
@@ -346,9 +347,9 @@ class Parser:
         expr = self.parse_expr()
         self.consume(")")
 
-        # self.consume("{")
+        self.consume("{")
         stmts = self.parse_stmts()
-        self.consume("end")
+        self.consume("}")
 
         return ["while", expr, stmts]
 
@@ -368,11 +369,11 @@ class Parser:
     def parse_stmt(self):
         t = self.peek()
 
-        if t.value == "end":
+        if t.value == "}":
             return None
         elif t.value == "when": # case の場合に出現
             return None
-        elif t.value == "def":
+        elif t.value == "func":
             return self.parse_func()
         elif t.value == "var":
             return self.parse_var()
