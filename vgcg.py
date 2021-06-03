@@ -42,56 +42,6 @@ def to_lvar_addr(lvar_names, lvar_name):
     i = lvar_names.index(lvar_name)
     return f"[bp-{i+1}]"
 
-def codegen_case(fn_arg_names, lvar_names, when_blocks):
-    global g_label_id
-
-    alines = []
-    g_label_id += 1
-    label_id = g_label_id
-
-    when_idx = -1
-    then_bodies = []
-
-    for when_block in when_blocks:
-        when_idx += 1
-        cond = when_block[0]
-        rest = when_block[1:]
-        cond_head = cond[0]
-        cond_rest = cond[1:]
-        alines.append(f"  # 条件 {label_id}_{when_idx}: {cond}")
-
-        if cond_head == "eq":
-            alines = concat_alines(
-                alines,
-                codegen_exp(fn_arg_names, lvar_names, cond)
-            )
-
-            alines.append(f"  set_reg_b 1")
-            alines.append(f"  compare")
-            alines.append(f"  jump_eq when_{label_id}_{when_idx}")
-
-            then_alines = [f"label when_{label_id}_{when_idx}"]
-            then_alines = concat_alines(
-                then_alines,
-                codegen_stmts(fn_arg_names, lvar_names, rest)
-            )
-            then_alines.append(f"  jump end_case_{label_id}")
-            then_bodies.append(then_alines)
-        else:
-            raise not_yet_impl("cond_head", cond_head)
-
-    alines.append(f"  jump end_case_{label_id}")
-
-    for then_alines in then_bodies:
-        alines = concat_alines(
-            alines,
-            then_alines
-        )
-
-    alines.append(f"label end_case_{label_id}")
-
-    return alines
-
 def codegen_exp(fn_arg_names, lvar_names, exp):
     global g_label_id
 
@@ -374,6 +324,56 @@ def codegen_while(fn_arg_names, lvar_names, rest):
     alines.append(f"  jump while_{label_id}")
     alines.append(f"label end_while_{label_id}")
     alines.append("")
+
+    return alines
+
+def codegen_case(fn_arg_names, lvar_names, when_blocks):
+    global g_label_id
+
+    alines = []
+    g_label_id += 1
+    label_id = g_label_id
+
+    when_idx = -1
+    then_bodies = []
+
+    for when_block in when_blocks:
+        when_idx += 1
+        cond = when_block[0]
+        rest = when_block[1:]
+        cond_head = cond[0]
+        cond_rest = cond[1:]
+        alines.append(f"  # 条件 {label_id}_{when_idx}: {cond}")
+
+        if cond_head == "eq":
+            alines = concat_alines(
+                alines,
+                codegen_exp(fn_arg_names, lvar_names, cond)
+            )
+
+            alines.append(f"  set_reg_b 1")
+            alines.append(f"  compare")
+            alines.append(f"  jump_eq when_{label_id}_{when_idx}")
+
+            then_alines = [f"label when_{label_id}_{when_idx}"]
+            then_alines = concat_alines(
+                then_alines,
+                codegen_stmts(fn_arg_names, lvar_names, rest)
+            )
+            then_alines.append(f"  jump end_case_{label_id}")
+            then_bodies.append(then_alines)
+        else:
+            raise not_yet_impl("cond_head", cond_head)
+
+    alines.append(f"  jump end_case_{label_id}")
+
+    for then_alines in then_bodies:
+        alines = concat_alines(
+            alines,
+            then_alines
+        )
+
+    alines.append(f"label end_case_{label_id}")
 
     return alines
 
