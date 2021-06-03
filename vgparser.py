@@ -313,6 +313,19 @@ class Parser:
 
         return ["return", expr]
 
+    def parse_while(self):
+        self.consume("while")
+
+        self.consume("(")
+        expr = self.parse_expr()
+        self.consume(")")
+
+        self.consume("{")
+        stmts = self.parse_stmts()
+        self.consume("}")
+
+        return ["while", expr, stmts]
+
     def parse_case(self):
         self.consume("case")
 
@@ -339,19 +352,6 @@ class Parser:
         self.consume("}")
 
         return ["case", *when_clauses]
-
-    def parse_while(self):
-        self.consume("while")
-
-        self.consume("(")
-        expr = self.parse_expr()
-        self.consume(")")
-
-        self.consume("{")
-        stmts = self.parse_stmts()
-        self.consume("}")
-
-        return ["while", expr, stmts]
 
     def parse__cmt(self):
         self.consume("_cmt")
