@@ -92,43 +92,6 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
 
     return alines
 
-def codegen_while(fn_arg_names, lvar_names, rest):
-    global g_label_id
-    alines = []
-    cond_exp = rest[0]
-    body = rest[1]
-
-    g_label_id += 1
-    label_id = g_label_id
-
-    alines.append("")
-
-    alines.append(f"label while_{label_id}")
-
-    alines = concat_alines(
-        alines,
-        codegen_exp(fn_arg_names, lvar_names, cond_exp)
-    )
-
-    alines.append(f"  set_reg_b 1")
-    alines.append(f"  compare")
-
-    alines.append(f"  jump_eq true_{label_id}")
-
-    alines.append(f"  jump end_while_{label_id}")
-
-    alines.append(f"label true_{label_id}")
-
-    alines = concat_alines(
-        alines,
-        codegen_stmts(fn_arg_names, lvar_names, body)
-    )
-    alines.append(f"  jump while_{label_id}")
-    alines.append(f"label end_while_{label_id}")
-    alines.append("")
-
-    return alines
-
 def codegen_exp(fn_arg_names, lvar_names, exp):
     global g_label_id
 
@@ -374,6 +337,43 @@ def codegen_return(_, lvar_names, stmt_rest):
 
     else:
         raise not_yet_impl("retval", retval)
+
+    return alines
+
+def codegen_while(fn_arg_names, lvar_names, rest):
+    global g_label_id
+    alines = []
+    cond_exp = rest[0]
+    body = rest[1]
+
+    g_label_id += 1
+    label_id = g_label_id
+
+    alines.append("")
+
+    alines.append(f"label while_{label_id}")
+
+    alines = concat_alines(
+        alines,
+        codegen_exp(fn_arg_names, lvar_names, cond_exp)
+    )
+
+    alines.append(f"  set_reg_b 1")
+    alines.append(f"  compare")
+
+    alines.append(f"  jump_eq true_{label_id}")
+
+    alines.append(f"  jump end_while_{label_id}")
+
+    alines.append(f"label true_{label_id}")
+
+    alines = concat_alines(
+        alines,
+        codegen_stmts(fn_arg_names, lvar_names, body)
+    )
+    alines.append(f"  jump while_{label_id}")
+    alines.append(f"label end_while_{label_id}")
+    alines.append("")
 
     return alines
 
