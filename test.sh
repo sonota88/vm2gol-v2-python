@@ -23,7 +23,7 @@ test_nn() {
 
   local exp_vga_file="${TEST_DIR}/exp_${nn}.vga.txt"
 
-  python vgparser.py ${TEST_DIR}/${nn}.vg.txt > $TEMP_VGT_FILE
+  python parser.py ${TEST_DIR}/${nn}.vg.txt > $TEMP_VGT_FILE
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_parse"
     return
