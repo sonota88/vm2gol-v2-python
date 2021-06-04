@@ -145,7 +145,6 @@ class Parser:
             elif t.value == ",":
                 self.pos += 1
             else:
-                self.dump_state()
                 raise parse_error(t)
 
         return args
@@ -199,7 +198,6 @@ class Parser:
         elif t.value == "=":
             return self.parse_var_init()
         else:
-            self.dump_state()
             raise parse_error(t)
 
     def parse_expr_right(self, expr_l):
@@ -225,7 +223,6 @@ class Parser:
             expr_r = self.parse_expr()
             return ["neq", expr_l, expr_r]
         else:
-            self.dump_state()
             raise parse_error(t)
             
 
@@ -244,7 +241,6 @@ class Parser:
             expr_l = t_left.value
             return self.parse_expr_right(expr_l)
         else:
-            self.dump_state()
             raise parse_error()
 
     def parse_set(self):
@@ -392,7 +388,6 @@ class Parser:
         elif t.value == "_cmt":
             return self.parse__cmt()
         else:
-            self.dump_state()
             raise Exception("parse error")
 
     def is_end(self):
@@ -414,7 +409,12 @@ class Parser:
         return stmts
 
     def parse(self):
-        stmts = self.parse_stmts()
+        try:
+            stmts = self.parse_stmts()
+        except Exception as e:
+            self.dump_state()
+            raise e
+            
         return ["stmts", *stmts]
 
 # --------------------------------
