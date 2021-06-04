@@ -469,7 +469,7 @@ def codegen_func_def(rest):
 
     return alines
 
-def codegen_top_stmts(fn_arg_names, lvar_names, rest):
+def codegen_top_stmts(rest):
     alines = []
 
     for stmt in rest:
@@ -502,7 +502,7 @@ def codegen(tree):
 
     alines = concat_alines(
         alines,
-        codegen_top_stmts([], [], rest)
+        codegen_top_stmts(rest)
     )
 
     return alines
