@@ -78,27 +78,10 @@ def codegen_exp(fn_arg_names, lvar_names, exp):
     arg_l = args[0]
     arg_r = args[1]
 
-    left = None
-
-    if type(arg_l) == int:
-        left = arg_l
-    elif type(arg_l) == str:
-        if arg_l in fn_arg_names:
-            left = to_fn_arg_addr(fn_arg_names, arg_l)
-        elif arg_l in lvar_names:
-            left = to_lvar_addr(lvar_names, arg_l)
-        else:
-            raise not_yet_impl("todo", arg_l)
-    elif type(arg_l) == list:
-        alines = concat_alines(
-            alines,
-            codegen_exp(fn_arg_names, lvar_names, arg_l)
-        )
-        left = "reg_a"
-    else:
-        raise not_yet_impl("todo", arg_l)
-
-    alines.append(f"  push {left}")
+    alines = concat_alines(
+        alines,
+        _codegen_exp_push_left(fn_arg_names, lvar_names, arg_l)
+    )
 
     right = None
 
