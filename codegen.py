@@ -315,14 +315,11 @@ def codegen_return(_, lvar_names, stmt_rest):
 
     retval = stmt_rest[0]
 
-    re1 = r"vram\[([a-z0-9_]+)\]"
-
     if type(retval) == int:
         alines.append(f"  set_reg_a {retval}")
     elif type(retval) == str:
-        if re.match(re1, retval):
-            m = re.match(re1, retval)
-            var_name = m.group(1)
+        if _match_vram_ref(retval):
+            var_name = _match_vram_ref(retval)
             if var_name in lvar_names:
                 lvar_addr = to_lvar_addr(lvar_names, var_name)
                 alines.append(f"  get_vram {lvar_addr} reg_a")
