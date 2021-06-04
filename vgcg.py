@@ -320,7 +320,7 @@ def codegen_while(fn_arg_names, lvar_names, rest):
 
     alines = concat_alines(
         alines,
-        codegen_top_stmts(fn_arg_names, lvar_names, body)
+        codegen_stmts(fn_arg_names, lvar_names, body)
     )
     alines.append(f"  jump while_{label_id}")
     alines.append(f"label end_while_{label_id}")
@@ -359,7 +359,7 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
             then_alines = [f"label when_{label_id}_{when_idx}"]
             then_alines = concat_alines(
                 then_alines,
-                codegen_top_stmts(fn_arg_names, lvar_names, rest)
+                codegen_stmts(fn_arg_names, lvar_names, rest)
             )
             then_alines.append(f"  jump end_case_{label_id}")
             then_bodies.append(then_alines)
