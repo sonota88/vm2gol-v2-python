@@ -42,48 +42,48 @@ def to_lvar_addr(lvar_names, lvar_name):
     i = lvar_names.index(lvar_name)
     return f"[bp-{i+1}]"
 
-def _codegen_exp_push_left(fn_arg_names, lvar_names, arg_l):
+def _codegen_exp_push_left(fn_arg_names, lvar_names, val):
     alines = []
     push_arg = None
 
-    if type(arg_l) == int:
-        push_arg = arg_l
-    elif type(arg_l) == str:
-        if arg_l in fn_arg_names:
-            push_arg = to_fn_arg_addr(fn_arg_names, arg_l)
-        elif arg_l in lvar_names:
-            push_arg = to_lvar_addr(lvar_names, arg_l)
+    if type(val) == int:
+        push_arg = val
+    elif type(val) == str:
+        if val in fn_arg_names:
+            push_arg = to_fn_arg_addr(fn_arg_names, val)
+        elif val in lvar_names:
+            push_arg = to_lvar_addr(lvar_names, val)
         else:
-            raise not_yet_impl("todo", arg_l)
-    elif type(arg_l) == list:
+            raise not_yet_impl("todo", val)
+    elif type(val) == list:
         alines = concat_alines(
             alines,
-            codegen_exp(fn_arg_names, lvar_names, arg_l)
+            codegen_exp(fn_arg_names, lvar_names, val)
         )
         push_arg = "reg_a"
     else:
-        raise not_yet_impl("todo", arg_l)
+        raise not_yet_impl("todo", val)
 
     alines.append(f"  push {push_arg}")
 
     return alines
 
-def _codegen_exp_push_right(fn_arg_names, lvar_names, arg_r):
+def _codegen_exp_push_right(fn_arg_names, lvar_names, val):
     alines = []
 
     push_arg = None
 
-    if type(arg_r) == int:
-        push_arg = arg_r
-    elif type(arg_r) == str:
-        if arg_r in fn_arg_names:
-            push_arg = to_fn_arg_addr(fn_arg_names, arg_r)
-        elif arg_r in lvar_names:
-            push_arg = to_lvar_addr(lvar_names, arg_r)
+    if type(val) == int:
+        push_arg = val
+    elif type(val) == str:
+        if val in fn_arg_names:
+            push_arg = to_fn_arg_addr(fn_arg_names, val)
+        elif val in lvar_names:
+            push_arg = to_lvar_addr(lvar_names, val)
         else:
-            raise not_yet_impl("todo", arg_r)
+            raise not_yet_impl("todo", val)
     else:
-        raise not_yet_impl("todo", arg_r)
+        raise not_yet_impl("todo", val)
 
     alines.append(f"  push {push_arg}")
 
