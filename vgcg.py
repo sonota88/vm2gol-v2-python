@@ -68,6 +68,27 @@ def _codegen_exp_push_left(fn_arg_names, lvar_names, arg_l):
 
     return alines
 
+def _codegen_exp_push_right(fn_arg_names, lvar_names, arg_r):
+    alines = []
+
+    right = None
+
+    if type(arg_r) == int:
+        right = arg_r
+    elif type(arg_r) == str:
+        if arg_r in fn_arg_names:
+            right = to_fn_arg_addr(fn_arg_names, arg_r)
+        elif arg_r in lvar_names:
+            right = to_lvar_addr(lvar_names, arg_r)
+        else:
+            raise not_yet_impl("todo", arg_r)
+    else:
+        raise not_yet_impl("todo", arg_r)
+
+    alines.append(f"  push {right}")
+
+    return alines
+
 def codegen_exp(fn_arg_names, lvar_names, exp):
     global g_label_id
 
