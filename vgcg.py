@@ -481,31 +481,6 @@ def codegen_top_stmts(fn_arg_names, lvar_names, rest):
                 alines,
                 codegen_func_def(stmt_rest)
             )
-        elif stmt_head == "call":
-            alines = concat_alines(
-                alines,
-                codegen_call(fn_arg_names, lvar_names, stmt_rest)
-            )
-        elif stmt_head == "call_set":
-            alines = concat_alines(
-                alines,
-                codegen_call_set(fn_arg_names, lvar_names, stmt_rest)
-            )
-        elif stmt_head == "set":
-            alines = concat_alines(
-                alines,
-                codegen_set(fn_arg_names, lvar_names, stmt_rest)
-            )
-        elif stmt_head == "case":
-            alines = concat_alines(
-                alines,
-                codegen_case(fn_arg_names, lvar_names, stmt_rest)
-            )
-        elif stmt_head == "while":
-            alines = concat_alines(
-                alines,
-                codegen_while(fn_arg_names, lvar_names, stmt_rest)
-            )
         elif stmt_head == "_cmt":
             alines = concat_alines(
                 alines,
