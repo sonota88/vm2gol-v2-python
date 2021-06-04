@@ -127,25 +127,28 @@ class Parser:
 
     # --------------------------------
 
+    def _parse_arg(self):
+        t = self.peek()
+        if t.type == "ident":
+            self.pos += 1
+            return t.value
+        elif t.type == "int":
+            self.pos += 1
+            return t.value
+        else:
+            raise parse_error(t)
+
     def parse_args(self):
         args = []
 
-        while(True):
-            t = self.peek()
-            if t.value == ")":
-                break
-            elif t.type == "ident":
-                self.pos += 1
-                name = t.value
-                args.append(name)
-            elif t.type == "int":
-                self.pos += 1
-                val = t.value
-                args.append(val)
-            elif t.value == ",":
-                self.pos += 1
-            else:
-                raise parse_error(t)
+        if self.peek().value == ")":
+            return args
+
+        args.append(self._parse_arg())
+
+        while(self.peek().value == ","):
+            self.consume(",")
+            args.append(self._parse_arg())
 
         return args
 
