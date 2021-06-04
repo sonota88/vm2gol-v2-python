@@ -412,9 +412,6 @@ def codegen_stmts(fn_arg_names, lvar_names, stmts):
                 codegen_set(fn_arg_names, lvar_names, stmt_rest)
             )
 
-        # elif stmt_head == "eq":
-        #     alines = concat_alines(alines, codegen_(fn_arg_names, lvar_names, stmt_rest))
-
         elif stmt_head == "return":
             alines = concat_alines(
                 alines,
