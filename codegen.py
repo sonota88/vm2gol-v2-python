@@ -51,6 +51,15 @@ def _match_vram_addr(s):
     else:
         return None
 
+def _match_vram_ref(s):
+    pattern = r"vram\[([a-z_][a-z0-9_]*)\]"
+
+    if re.match(pattern, s):
+        m = re.match(pattern, s)
+        return m.group(1)
+    else:
+        return None
+
 # --------------------------------
 
 def _codegen_exp_push(fn_arg_names, lvar_names, val):
@@ -252,8 +261,6 @@ def codegen_set(fn_arg_names, lvar_names, rest):
 
     src_val = None
 
-    re2 = r"vram\[([a-z_][a-z0-9_]*)\]"
-
     if type(exp) == int:
         src_val = exp
     elif type(exp) == list:
@@ -271,9 +278,8 @@ def codegen_set(fn_arg_names, lvar_names, rest):
             vram_addr = _match_vram_addr(exp)
             alines.append(f"  get_vram {vram_addr} reg_a")
             src_val = "reg_a"
-        elif re.match(re2, exp):
-            m = re.match(re2, exp)
-            var_name = m.group(1)
+        elif _match_vram_ref(exp):
+            var_name = _match_vram_ref(exp)
             if var_name in lvar_names:
                 lvar_addr = to_lvar_addr(lvar_names, var_name)
                 alines.append(f"  get_vram {lvar_addr} reg_a")
