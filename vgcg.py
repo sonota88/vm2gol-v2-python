@@ -110,6 +110,30 @@ def _codegen_exp_eq():
 
     return alines
 
+def _codegen_exp_neq():
+    global g_label_id
+
+    alines = []
+
+    g_label_id += 1
+    label_id = g_label_id
+
+    alines.append(f"  pop reg_b")
+    alines.append(f"  pop reg_a")
+
+    alines.append(f"  compare")
+    alines.append(f"  jump_eq then_{label_id}")
+
+    alines.append(f"  set_reg_a 1")
+    alines.append(f"  jump end_neq_{label_id}")
+
+    alines.append(f"label then_{label_id}")
+    alines.append(f"  set_reg_a 0")
+
+    alines.append(f"label end_neq_{label_id}")
+
+    return alines
+
 def codegen_exp(fn_arg_names, lvar_names, exp):
     global g_label_id
 
@@ -137,22 +161,7 @@ def codegen_exp(fn_arg_names, lvar_names, exp):
     elif operator == "eq":
         alines = concat_alines(alines, _codegen_exp_eq())
     elif operator == "neq":
-        g_label_id += 1
-        label_id = g_label_id
-
-        alines.append(f"  pop reg_b")
-        alines.append(f"  pop reg_a")
-
-        alines.append(f"  compare")
-        alines.append(f"  jump_eq then_{label_id}")
-
-        alines.append(f"  set_reg_a 1")
-        alines.append(f"  jump end_neq_{label_id}")
-
-        alines.append(f"label then_{label_id}")
-        alines.append(f"  set_reg_a 0")
-
-        alines.append(f"label end_neq_{label_id}")
+        alines = concat_alines(alines, _codegen_exp_neq())
     else:
         raise not_yet_impl("todo", operator)
 
