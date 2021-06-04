@@ -42,7 +42,7 @@ def to_lvar_addr(lvar_names, lvar_name):
     i = lvar_names.index(lvar_name)
     return f"[bp-{i+1}]"
 
-def _codegen_exp_push_left(fn_arg_names, lvar_names, val):
+def _codegen_exp_push(fn_arg_names, lvar_names, val):
     alines = []
     push_arg = None
 
@@ -68,26 +68,26 @@ def _codegen_exp_push_left(fn_arg_names, lvar_names, val):
 
     return alines
 
-def _codegen_exp_push_right(fn_arg_names, lvar_names, val):
-    alines = []
-
-    push_arg = None
-
-    if type(val) == int:
-        push_arg = val
-    elif type(val) == str:
-        if val in fn_arg_names:
-            push_arg = to_fn_arg_addr(fn_arg_names, val)
-        elif val in lvar_names:
-            push_arg = to_lvar_addr(lvar_names, val)
-        else:
-            raise not_yet_impl("todo", val)
-    else:
-        raise not_yet_impl("todo", val)
-
-    alines.append(f"  push {push_arg}")
-
-    return alines
+# def _codegen_exp_push_right(fn_arg_names, lvar_names, val):
+#     alines = []
+# 
+#     push_arg = None
+# 
+#     if type(val) == int:
+#         push_arg = val
+#     elif type(val) == str:
+#         if val in fn_arg_names:
+#             push_arg = to_fn_arg_addr(fn_arg_names, val)
+#         elif val in lvar_names:
+#             push_arg = to_lvar_addr(lvar_names, val)
+#         else:
+#             raise not_yet_impl("todo", val)
+#     else:
+#         raise not_yet_impl("todo", val)
+# 
+#     alines.append(f"  push {push_arg}")
+# 
+#     return alines
 
 def codegen_exp(fn_arg_names, lvar_names, exp):
     global g_label_id
@@ -101,12 +101,12 @@ def codegen_exp(fn_arg_names, lvar_names, exp):
 
     alines = concat_alines(
         alines,
-        _codegen_exp_push_left(fn_arg_names, lvar_names, arg_l)
+        _codegen_exp_push(fn_arg_names, lvar_names, arg_l)
     )
 
     alines = concat_alines(
         alines,
-        _codegen_exp_push_right(fn_arg_names, lvar_names, arg_r)
+        _codegen_exp_push(fn_arg_names, lvar_names, arg_r)
     )
 
     if operator == "+":
