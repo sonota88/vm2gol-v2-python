@@ -252,25 +252,28 @@ def codegen_set(fn_arg_names, lvar_names, rest):
             codegen_exp(fn_arg_names, lvar_names, exp)
         )
         src_val = "reg_a"
-    elif exp in fn_arg_names:
-        src_val = to_fn_arg_addr(fn_arg_names, exp)
-    elif exp in lvar_names:
-        src_val = to_lvar_addr(lvar_names, exp)
-    elif re.match(re1, exp):
-        m = re.match(re1, exp)
-        vram_addr = m.group(1)
-        alines.append(f"  get_vram {vram_addr} reg_a")
-        src_val = "reg_a"
-    elif re.match(re2, exp):
-        m = re.match(re2, exp)
-        var_name = m.group(1)
-        if var_name in lvar_names:
-            lvar_addr = to_lvar_addr(lvar_names, var_name)
-            alines.append(f"  get_vram {lvar_addr} reg_a")
+    elif type(exp) == str:
+        if exp in fn_arg_names:
+            src_val = to_fn_arg_addr(fn_arg_names, exp)
+        elif exp in lvar_names:
+            src_val = to_lvar_addr(lvar_names, exp)
+        elif re.match(re1, exp):
+            m = re.match(re1, exp)
+            vram_addr = m.group(1)
+            alines.append(f"  get_vram {vram_addr} reg_a")
+            src_val = "reg_a"
+        elif re.match(re2, exp):
+            m = re.match(re2, exp)
+            var_name = m.group(1)
+            if var_name in lvar_names:
+                lvar_addr = to_lvar_addr(lvar_names, var_name)
+                alines.append(f"  get_vram {lvar_addr} reg_a")
+            else:
+                raise not_yet_impl("exp", exp)
+
+            src_val = "reg_a"
         else:
             raise not_yet_impl("exp", exp)
-
-        src_val = "reg_a"
     else:
         raise not_yet_impl("exp", exp)
 
