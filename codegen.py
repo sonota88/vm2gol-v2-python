@@ -292,21 +292,21 @@ def codegen_set(fn_arg_names, lvar_names, rest):
     else:
         raise not_yet_impl("exp", exp)
 
-    re1 = r"vram\[(.+)\]"
-
-    if re.match(re1, dest): # TODO vram
-        m = re.match(re1, dest)
-        vram_addr = m.group(1)
-        if re.match(r"\d+", vram_addr):
-            alines.append(f"  set_vram {vram_addr} {src_val}")
-        elif vram_addr in lvar_names:
-            addr = to_lvar_addr(lvar_names, vram_addr)
+    if _match_vram_addr(dest):
+        vram_addr = _match_vram_addr(dest)
+        alines.append(f"  set_vram {vram_addr} {src_val}")
+    elif _match_vram_ref(dest):
+        vram_ref = _match_vram_ref(dest)
+        if vram_ref in lvar_names:
+            addr = to_lvar_addr(lvar_names, vram_ref)
             alines.append(f"  set_vram {addr} {src_val}")
         else:
             raise not_yet_impl("dest", dest)
-    else:
+    elif dest in lvar_names:
         lvar_addr = to_lvar_addr(lvar_names, dest)
         alines.append(f"  cp {src_val} {lvar_addr}")
+    else:
+        raise not_yet_impl("dest", dest)
 
     return alines
 
