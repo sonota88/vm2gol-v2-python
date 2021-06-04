@@ -381,6 +381,65 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
 def codegen_comment(comment):
     return ["  _cmt " + comment.replace(" ", "~")]
 
+def codegen_stmts(fn_arg_names, lvar_names, stmts):
+    alines = []
+
+    for stmt in stmts:
+        stmt_head = stmt[0]
+        stmt_rest = stmt[1:]
+
+        if stmt_head == "call":
+            alines = concat_alines(
+                alines,
+                codegen_call(fn_arg_names, lvar_names, stmt_rest)
+            )
+        elif stmt_head == "call_set":
+            alines = concat_alines(
+                alines,
+                codegen_call_set(fn_arg_names, lvar_names, stmt_rest)
+            )
+        elif stmt_head == "var":
+            lvar_names.append(stmt_rest[0])
+            alines.append("  sub_sp 1")
+            if len(stmt_rest) == 2:
+                alines = concat_alines(
+                    alines,
+                    codegen_set(fn_arg_names, lvar_names, stmt_rest)
+                )
+        elif stmt_head == "set":
+            alines = concat_alines(
+                alines,
+                codegen_set(fn_arg_names, lvar_names, stmt_rest)
+            )
+
+        # elif stmt_head == "eq":
+        #     alines = concat_alines(alines, codegen_(fn_arg_names, lvar_names, stmt_rest))
+
+        elif stmt_head == "return":
+            alines = concat_alines(
+                alines,
+                codegen_return(fn_arg_names, lvar_names, stmt_rest)
+            )
+        elif stmt_head == "case":
+            alines = concat_alines(
+                alines,
+                codegen_case(fn_arg_names, lvar_names, stmt_rest)
+            )
+        elif stmt_head == "while":
+            alines = concat_alines(
+                alines,
+                codegen_while(fn_arg_names, lvar_names, stmt_rest)
+            )
+        elif stmt_head == "_cmt":
+            alines = concat_alines(
+                alines,
+                codegen_comment(stmt_rest[0])
+            )
+        else:
+            raise not_yet_impl("stmt_head", stmt_head)
+
+    return alines
+
 def codegen_func_def(rest):
     alines = []
 
