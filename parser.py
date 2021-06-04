@@ -325,6 +325,22 @@ class Parser:
 
         return ["while", expr, stmts]
 
+    def _parse_when_clause(self):
+        t = self.peek()
+        if t.value == "}":
+            return None
+
+        self.consume("when")
+        self.consume("(")
+        expr = self.parse_expr()
+        self.consume(")")
+
+        self.consume("{")
+        stmts = self.parse_stmts()
+        self.consume("}")
+
+        return [expr, *stmts]
+
     def parse_case(self):
         self.consume("case")
 
@@ -333,20 +349,11 @@ class Parser:
         when_clauses = []
 
         while(True):
-            t = self.peek()
-            if t.value == "}":
+            when_clause = self._parse_when_clause()
+            if when_clause is None:
                 break
-
-            self.consume("when")
-            self.consume("(")
-            expr = self.parse_expr()
-            self.consume(")")
-
-            self.consume("{")
-            stmts = self.parse_stmts()
-            self.consume("}")
-
-            when_clauses.append([expr, *stmts])
+            else:
+                when_clauses.append(when_clause)
 
         self.consume("}")
 
