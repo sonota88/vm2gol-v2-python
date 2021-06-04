@@ -68,6 +68,15 @@ def _codegen_exp_push(fn_arg_names, lvar_names, val):
 
     return alines
 
+def _codegen_exp_add():
+    alines = []
+
+    alines.append("  pop reg_b")
+    alines.append("  pop reg_a")
+    alines.append("  add_ab")
+
+    return alines
+
 def codegen_exp(fn_arg_names, lvar_names, exp):
     global g_label_id
 
@@ -89,9 +98,7 @@ def codegen_exp(fn_arg_names, lvar_names, exp):
     )
 
     if operator == "+":
-        alines.append("  pop reg_b")
-        alines.append("  pop reg_a")
-        alines.append("  add_ab")
+        alines = concat_alines(alines, _codegen_exp_add())
     elif operator == "*":
         alines.append("  pop reg_b")
         alines.append("  pop reg_a")
