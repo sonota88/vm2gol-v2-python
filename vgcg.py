@@ -44,15 +44,15 @@ def to_lvar_addr(lvar_names, lvar_name):
 
 def _codegen_exp_push_left(fn_arg_names, lvar_names, arg_l):
     alines = []
-    left = None
+    push_arg = None
 
     if type(arg_l) == int:
-        left = arg_l
+        push_arg = arg_l
     elif type(arg_l) == str:
         if arg_l in fn_arg_names:
-            left = to_fn_arg_addr(fn_arg_names, arg_l)
+            push_arg = to_fn_arg_addr(fn_arg_names, arg_l)
         elif arg_l in lvar_names:
-            left = to_lvar_addr(lvar_names, arg_l)
+            push_arg = to_lvar_addr(lvar_names, arg_l)
         else:
             raise not_yet_impl("todo", arg_l)
     elif type(arg_l) == list:
@@ -60,32 +60,32 @@ def _codegen_exp_push_left(fn_arg_names, lvar_names, arg_l):
             alines,
             codegen_exp(fn_arg_names, lvar_names, arg_l)
         )
-        left = "reg_a"
+        push_arg = "reg_a"
     else:
         raise not_yet_impl("todo", arg_l)
 
-    alines.append(f"  push {left}")
+    alines.append(f"  push {push_arg}")
 
     return alines
 
 def _codegen_exp_push_right(fn_arg_names, lvar_names, arg_r):
     alines = []
 
-    right = None
+    push_arg = None
 
     if type(arg_r) == int:
-        right = arg_r
+        push_arg = arg_r
     elif type(arg_r) == str:
         if arg_r in fn_arg_names:
-            right = to_fn_arg_addr(fn_arg_names, arg_r)
+            push_arg = to_fn_arg_addr(fn_arg_names, arg_r)
         elif arg_r in lvar_names:
-            right = to_lvar_addr(lvar_names, arg_r)
+            push_arg = to_lvar_addr(lvar_names, arg_r)
         else:
             raise not_yet_impl("todo", arg_r)
     else:
         raise not_yet_impl("todo", arg_r)
 
-    alines.append(f"  push {right}")
+    alines.append(f"  push {push_arg}")
 
     return alines
 
