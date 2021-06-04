@@ -29,9 +29,9 @@ test_nn() {
     return
   fi
 
-  python vgcg.py $TEMP_VGT_FILE | tr "'" '"'> $TEMP_VGA_FILE
+  python codegen.py $TEMP_VGT_FILE | tr "'" '"'> $TEMP_VGA_FILE
   if [ $? -ne 0 ]; then
-    ERRS="${ERRS},${nn}_cg"
+    ERRS="${ERRS},${nn}_codegen"
     return
   fi
 
