@@ -219,25 +219,7 @@ def codegen_set(fn_arg_names, lvar_names, rest):
 
 def codegen_return(_, lvar_names, stmt_rest):
     retval = stmt_rest[0]
-
-    if type(retval) == int:
-        print(f"  cp {retval} reg_a")
-    elif type(retval) == str:
-        if _match_vram_ref(retval):
-            var_name = _match_vram_ref(retval)
-            if var_name in lvar_names:
-                lvar_addr = to_lvar_addr(lvar_names, var_name)
-                print(f"  get_vram {lvar_addr} reg_a")
-            else:
-                raise not_yet_impl("retval", retval)
-        elif retval in lvar_names:
-            lvar_addr = to_lvar_addr(lvar_names, retval)
-            print(f"  cp {lvar_addr} reg_a")
-        else:
-            raise not_yet_impl("retval", retval)
-
-    else:
-        raise not_yet_impl("retval", retval)
+    codegen_expr([], lvar_names, retval)
 
 def codegen_while(fn_arg_names, lvar_names, rest):
     global g_label_id
