@@ -441,7 +441,7 @@ class Parser:
             self.dump_state()
             raise e
             
-        return ["stmts", *stmts]
+        return ["top_stmts", *stmts]
 
 # --------------------------------
 
