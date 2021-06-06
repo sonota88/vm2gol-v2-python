@@ -359,7 +359,7 @@ class Parser:
 
         return ["case", *when_clauses]
 
-    def parse__cmt(self):
+    def parse_vm_comment(self):
         self.consume("_cmt")
         self.consume("(")
 
@@ -396,7 +396,7 @@ class Parser:
         elif t.value == "case":
             return self.parse_case()
         elif t.value == "_cmt":
-            return self.parse__cmt()
+            return self.parse_vm_comment()
         else:
             raise Exception("parse error")
 
