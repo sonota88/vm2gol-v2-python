@@ -21,7 +21,7 @@ test_nn() {
 
   echo "test_${nn}"
 
-  local exp_vga_file="${TEST_DIR}/compile/exp_${nn}.vga.txt"
+  local exp_file="${TEST_DIR}/compile/exp_${nn}.vga.txt"
 
   python parser.py ${TEST_DIR}/compile/${nn}.vg.txt > $TEMP_VGT_FILE
   if [ $? -ne 0 ]; then
@@ -35,9 +35,9 @@ test_nn() {
     return
   fi
 
-  ruby test/diff.rb $exp_vga_file $TEMP_VGA_FILE
+  ruby test/diff.rb $exp_file $TEMP_VGA_FILE
   if [ $? -ne 0 ]; then
-    # meld $exp_vga_file $TEMP_VGA_FILE &
+    # meld $exp_file $TEMP_VGA_FILE &
 
     ERRS="${ERRS},${nn}_diff"
     return
