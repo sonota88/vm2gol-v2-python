@@ -270,27 +270,22 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
         when_idx += 1
         cond = when_block[0]
         rest = when_block[1:]
-        cond_head = cond[0]
-        cond_rest = cond[1:]
         print(f"  # 条件 {label_id}_{when_idx}: {cond}")
 
-        if cond_head == "eq":
-            codegen_expr(fn_arg_names, lvar_names, cond)
+        codegen_expr(fn_arg_names, lvar_names, cond)
 
-            print(f"  set_reg_b 1")
-            print(f"  compare")
-            print(f"  jump_eq {label_when_head}_{when_idx}")
-            print(f"  jump {label_end_when_head}_{when_idx}")
+        print(f"  set_reg_b 1")
+        print(f"  compare")
+        print(f"  jump_eq {label_when_head}_{when_idx}")
+        print(f"  jump {label_end_when_head}_{when_idx}")
 
-            print(f"label {label_when_head}_{when_idx}")
+        print(f"label {label_when_head}_{when_idx}")
 
-            codegen_stmts(fn_arg_names, lvar_names, rest)
+        codegen_stmts(fn_arg_names, lvar_names, rest)
 
-            print(f"  jump {label_end}")
+        print(f"  jump {label_end}")
 
-            print(f"label {label_end_when_head}_{when_idx}")
-        else:
-            raise not_yet_impl("cond_head", cond_head)
+        print(f"label {label_end_when_head}_{when_idx}")
 
     print(f"label {label_end}")
 
