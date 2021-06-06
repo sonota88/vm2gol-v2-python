@@ -169,7 +169,7 @@ def _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg):
     else:
         raise not_yet_impl("fn_arg", fn_arg)
 
-    print(f"  push {push_arg}") 
+    print(f"  cp {push_arg} reg_a") 
 
 def codegen_call(fn_arg_names, lvar_names, stmt_rest):
     fn_name = stmt_rest[0]
@@ -177,6 +177,7 @@ def codegen_call(fn_arg_names, lvar_names, stmt_rest):
 
     for fn_arg in reversed(fn_args):
         _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg)
+        print(f"  push reg_a")
 
     codegen_vm_comment(f"call  {fn_name}")
     print(f"  call {fn_name}")
@@ -191,6 +192,7 @@ def codegen_call_set(fn_arg_names, lvar_names, stmt_rest):
 
     for fn_arg in reversed(fn_args):
         _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg)
+        print(f"  push reg_a")
 
     codegen_vm_comment(f"call_set  {fn_name}")
     print(f"  call {fn_name}")
