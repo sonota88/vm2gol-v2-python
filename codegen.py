@@ -56,23 +56,6 @@ def _match_vram_ref(s):
 
 # --------------------------------
 
-def _codegen_expr_push(fn_arg_names, lvar_names, val):
-    if type(val) == int:
-        print(f"  cp {val} reg_a")
-    elif type(val) == str:
-        if val in fn_arg_names:
-            cp_src = to_fn_arg_addr(fn_arg_names, val)
-            print(f"  cp {cp_src} reg_a")
-        elif val in lvar_names:
-            cp_src = to_lvar_addr(lvar_names, val)
-            print(f"  cp {cp_src} reg_a")
-        else:
-            raise not_yet_impl("todo", val)
-    elif type(val) == list:
-        _codegen_expr_binary(fn_arg_names, lvar_names, val)
-    else:
-        raise not_yet_impl("todo", val)
-
 def _codegen_expr_add():
     print("  pop reg_b")
     print("  pop reg_a")
@@ -155,9 +138,9 @@ def _codegen_expr_binary(fn_arg_names, lvar_names, expr):
     arg_l = args[0]
     arg_r = args[1]
 
-    _codegen_expr_push(fn_arg_names, lvar_names, arg_l)
+    codegen_expr(fn_arg_names, lvar_names, arg_l)
     print(f"  push reg_a")
-    _codegen_expr_push(fn_arg_names, lvar_names, arg_r)
+    codegen_expr(fn_arg_names, lvar_names, arg_r)
     print(f"  push reg_a")
 
     if operator == "+":
