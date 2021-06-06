@@ -77,7 +77,7 @@ def tokenize(src):
         elif re.match(re_int, rest):
             m = re.match(re_int, rest)
             s = m.group(1)
-            tokens.append( Token("int", int(s)) )
+            tokens.append( Token("int", s) )
             pos += len(s)
         elif re.match(re_sym, rest):
             m = re.match(re_sym, rest)
@@ -137,7 +137,7 @@ class Parser:
             return t.value
         elif t.type == "int":
             self.pos += 1
-            return t.value
+            return int(t.value)
         else:
             raise parse_error(t)
 
@@ -251,7 +251,13 @@ class Parser:
         if t_left.type == "int" or t_left.type == "ident":
             self.pos += 1
 
-            expr_l = t_left.value
+            if t_left.type == "int":
+                expr_l = int(t_left.value)
+            elif t_left.type == "ident":
+                expr_l = t_left.value
+            else:
+                raise Exception("invalid type")
+
             return self.parse_expr_right(expr_l)
         else:
             raise parse_error()
