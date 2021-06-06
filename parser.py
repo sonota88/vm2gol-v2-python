@@ -3,6 +3,8 @@ import re
 import sys
 from pprint import pformat
 
+from lib.common import Token
+
 def puts_e(arg):
     print(arg, file=sys.stderr)
 
@@ -29,17 +31,6 @@ def not_yet_impl(k, v):
 
 def parse_error(val=None):
     return Exception("parse error " + inspect(val))
-
-class Token:
-    def __init__(self, type, value):
-        self.type = type
-        self.value = value
-
-    def __str__(self):
-        return self.__repr()
-
-    def __repr__(self):
-        return "(" + self.type + ": " + str(self.value) + ")"
 
 def tokenize(src):
     tokens = []
