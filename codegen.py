@@ -21,12 +21,6 @@ def read_file(path):
             text += line
     return text
 
-def concat_alines(a, b):
-    for x in b:
-        a.append(x)
-
-    return a
-
 def not_yet_impl(k, v):
     return Exception(f"{k} ({v})")
 
@@ -63,7 +57,6 @@ def _match_vram_ref(s):
 # --------------------------------
 
 def _codegen_expr_push(fn_arg_names, lvar_names, val):
-    alines = []
     push_arg = None
 
     if type(val) == int:
@@ -76,40 +69,25 @@ def _codegen_expr_push(fn_arg_names, lvar_names, val):
         else:
             raise not_yet_impl("todo", val)
     elif type(val) == list:
-        alines = concat_alines(
-            alines,
-            codegen_expr(fn_arg_names, lvar_names, val)
-        )
+        codegen_expr(fn_arg_names, lvar_names, val)
         push_arg = "reg_a"
     else:
         raise not_yet_impl("todo", val)
 
-    alines.append(f"  push {push_arg}")
-
-    return alines
+    print(f"  push {push_arg}")
 
 def _codegen_expr_add():
-    alines = []
-
-    alines.append("  pop reg_b")
-    alines.append("  pop reg_a")
-    alines.append("  add_ab")
-
-    return alines
+    print("  pop reg_b")
+    print("  pop reg_a")
+    print("  add_ab")
 
 def _codegen_expr_mult():
-    alines = []
-
-    alines.append("  pop reg_b")
-    alines.append("  pop reg_a")
-    alines.append("  mult_ab")
-
-    return alines
+    print("  pop reg_b")
+    print("  pop reg_a")
+    print("  mult_ab")
 
 def _codegen_expr_eq():
     global g_label_id
-
-    alines = []
 
     g_label_id += 1
     label_id = g_label_id
@@ -117,26 +95,22 @@ def _codegen_expr_eq():
     label_end = f"end_eq_{label_id}"
     label_then = f"then_{label_id}"
 
-    alines.append(f"  pop reg_b")
-    alines.append(f"  pop reg_a")
+    print(f"  pop reg_b")
+    print(f"  pop reg_a")
 
-    alines.append(f"  compare")
-    alines.append(f"  jump_eq {label_then}")
+    print(f"  compare")
+    print(f"  jump_eq {label_then}")
 
-    alines.append(f"  set_reg_a 0")
-    alines.append(f"  jump {label_end}")
+    print(f"  set_reg_a 0")
+    print(f"  jump {label_end}")
 
-    alines.append(f"label {label_then}")
-    alines.append(f"  set_reg_a 1")
+    print(f"label {label_then}")
+    print(f"  set_reg_a 1")
 
-    alines.append(f"label {label_end}")
-
-    return alines
+    print(f"label {label_end}")
 
 def _codegen_expr_neq():
     global g_label_id
-
-    alines = []
 
     g_label_id += 1
     label_id = g_label_id
@@ -144,58 +118,44 @@ def _codegen_expr_neq():
     label_end = f"end_neq_{label_id}"
     label_then = f"then_{label_id}"
 
-    alines.append(f"  pop reg_b")
-    alines.append(f"  pop reg_a")
+    print(f"  pop reg_b")
+    print(f"  pop reg_a")
 
-    alines.append(f"  compare")
-    alines.append(f"  jump_eq {label_then}")
+    print(f"  compare")
+    print(f"  jump_eq {label_then}")
 
-    alines.append(f"  set_reg_a 1")
-    alines.append(f"  jump {label_end}")
+    print(f"  set_reg_a 1")
+    print(f"  jump {label_end}")
 
-    alines.append(f"label {label_then}")
-    alines.append(f"  set_reg_a 0")
+    print(f"label {label_then}")
+    print(f"  set_reg_a 0")
 
-    alines.append(f"label {label_end}")
-
-    return alines
+    print(f"label {label_end}")
 
 def codegen_expr(fn_arg_names, lvar_names, expr):
     global g_label_id
 
-    alines = []
     operator = expr[0]
     args = expr[1:]
 
     arg_l = args[0]
     arg_r = args[1]
 
-    alines = concat_alines(
-        alines,
-        _codegen_expr_push(fn_arg_names, lvar_names, arg_l)
-    )
-
-    alines = concat_alines(
-        alines,
-        _codegen_expr_push(fn_arg_names, lvar_names, arg_r)
-    )
+    _codegen_expr_push(fn_arg_names, lvar_names, arg_l)
+    _codegen_expr_push(fn_arg_names, lvar_names, arg_r)
 
     if operator == "+":
-        alines = concat_alines(alines, _codegen_expr_add())
+        _codegen_expr_add()
     elif operator == "*":
-        alines = concat_alines(alines, _codegen_expr_mult())
+        _codegen_expr_mult()
     elif operator == "eq":
-        alines = concat_alines(alines, _codegen_expr_eq())
+        _codegen_expr_eq()
     elif operator == "neq":
-        alines = concat_alines(alines, _codegen_expr_neq())
+        _codegen_expr_neq()
     else:
         raise not_yet_impl("todo", operator)
 
-    return alines
-
 def _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg):
-    alines = []
-
     push_arg = None
 
     if type(fn_arg) == int:
@@ -210,34 +170,20 @@ def _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg):
     else:
         raise not_yet_impl("fn_arg", fn_arg)
 
-    alines.append(f"  push {push_arg}") 
-
-    return alines
+    print(f"  push {push_arg}") 
 
 def codegen_call(fn_arg_names, lvar_names, stmt_rest):
-    alines = []
-
     fn_name = stmt_rest[0]
     fn_args = stmt_rest[1:] or []
 
     for fn_arg in reversed(fn_args):
-        alines = concat_alines(
-            alines,
-            _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg)
-        )
+        _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg)
 
-    alines = concat_alines(
-        alines,
-        codegen_vm_comment(f"call  {fn_name}")
-    )
-    alines.append(f"  call {fn_name}")
-    alines.append(f"  add_sp {len(fn_args)}")
-
-    return alines
+    codegen_vm_comment(f"call  {fn_name}")
+    print(f"  call {fn_name}")
+    print(f"  add_sp {len(fn_args)}")
 
 def codegen_call_set(fn_arg_names, lvar_names, stmt_rest):
-    alines = []
-
     lvar_name = stmt_rest[0]
     fn_temp = stmt_rest[1]
 
@@ -245,25 +191,16 @@ def codegen_call_set(fn_arg_names, lvar_names, stmt_rest):
     fn_args = fn_temp[1:]
 
     for fn_arg in reversed(fn_args):
-        alines = concat_alines(
-            alines,
-            _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg)
-        )
+        _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg)
 
-    alines = concat_alines(
-        alines,
-        codegen_vm_comment(f"call_set  {fn_name}")
-    )
-    alines.append(f"  call {fn_name}")
-    alines.append(f"  add_sp {len(fn_args)}")
+    codegen_vm_comment(f"call_set  {fn_name}")
+    print(f"  call {fn_name}")
+    print(f"  add_sp {len(fn_args)}")
 
     lvar_addr = to_lvar_addr(lvar_names, lvar_name)
-    alines.append(f"  cp reg_a {lvar_addr}")
-    
-    return alines
+    print(f"  cp reg_a {lvar_addr}")
 
 def codegen_set(fn_arg_names, lvar_names, rest):
-    alines = []
     dest = rest[0]
     expr = rest[1]
 
@@ -272,10 +209,7 @@ def codegen_set(fn_arg_names, lvar_names, rest):
     if type(expr) == int:
         src_val = expr
     elif type(expr) == list:
-        alines = concat_alines(
-            alines,
-            codegen_expr(fn_arg_names, lvar_names, expr)
-        )
+        codegen_expr(fn_arg_names, lvar_names, expr)
         src_val = "reg_a"
     elif type(expr) == str:
         if expr in fn_arg_names:
@@ -284,13 +218,13 @@ def codegen_set(fn_arg_names, lvar_names, rest):
             src_val = to_lvar_addr(lvar_names, expr)
         elif _match_vram_addr(expr):
             vram_addr = _match_vram_addr(expr)
-            alines.append(f"  get_vram {vram_addr} reg_a")
+            print(f"  get_vram {vram_addr} reg_a")
             src_val = "reg_a"
         elif _match_vram_ref(expr):
             var_name = _match_vram_ref(expr)
             if var_name in lvar_names:
                 lvar_addr = to_lvar_addr(lvar_names, var_name)
-                alines.append(f"  get_vram {lvar_addr} reg_a")
+                print(f"  get_vram {lvar_addr} reg_a")
             else:
                 raise not_yet_impl("expr", expr)
 
@@ -302,51 +236,45 @@ def codegen_set(fn_arg_names, lvar_names, rest):
 
     if _match_vram_addr(dest):
         vram_addr = _match_vram_addr(dest)
-        alines.append(f"  set_vram {vram_addr} {src_val}")
+        print(f"  set_vram {vram_addr} {src_val}")
     elif _match_vram_ref(dest):
         vram_ref = _match_vram_ref(dest)
         if vram_ref in lvar_names:
             addr = to_lvar_addr(lvar_names, vram_ref)
-            alines.append(f"  set_vram {addr} {src_val}")
+            print(f"  set_vram {addr} {src_val}")
         else:
             raise not_yet_impl("dest", dest)
     elif dest in lvar_names:
         lvar_addr = to_lvar_addr(lvar_names, dest)
-        alines.append(f"  cp {src_val} {lvar_addr}")
+        print(f"  cp {src_val} {lvar_addr}")
     else:
         raise not_yet_impl("dest", dest)
 
-    return alines
-
 def codegen_return(_, lvar_names, stmt_rest):
-    alines = []
-
     retval = stmt_rest[0]
 
     if type(retval) == int:
-        alines.append(f"  cp {retval} reg_a")
+        print(f"  cp {retval} reg_a")
     elif type(retval) == str:
         if _match_vram_ref(retval):
             var_name = _match_vram_ref(retval)
             if var_name in lvar_names:
                 lvar_addr = to_lvar_addr(lvar_names, var_name)
-                alines.append(f"  get_vram {lvar_addr} reg_a")
+                print(f"  get_vram {lvar_addr} reg_a")
             else:
                 raise not_yet_impl("retval", retval)
         elif retval in lvar_names:
             lvar_addr = to_lvar_addr(lvar_names, retval)
-            alines.append(f"  cp {lvar_addr} reg_a")
+            print(f"  cp {lvar_addr} reg_a")
         else:
             raise not_yet_impl("retval", retval)
 
     else:
         raise not_yet_impl("retval", retval)
 
-    return alines
-
 def codegen_while(fn_arg_names, lvar_names, rest):
     global g_label_id
-    alines = []
+
     cond_expr = rest[0]
     body = rest[1]
 
@@ -357,38 +285,29 @@ def codegen_while(fn_arg_names, lvar_names, rest):
     label_end = f"end_while_{label_id}"
     label_true = f"true_{label_id}"
 
-    alines.append("")
+    print("")
 
-    alines.append(f"label {label_begin}")
+    print(f"label {label_begin}")
 
-    alines = concat_alines(
-        alines,
-        codegen_expr(fn_arg_names, lvar_names, cond_expr)
-    )
+    codegen_expr(fn_arg_names, lvar_names, cond_expr)
 
-    alines.append(f"  set_reg_b 1")
-    alines.append(f"  compare")
+    print(f"  set_reg_b 1")
+    print(f"  compare")
 
-    alines.append(f"  jump_eq {label_true}")
+    print(f"  jump_eq {label_true}")
 
-    alines.append(f"  jump {label_end}")
+    print(f"  jump {label_end}")
 
-    alines.append(f"label {label_true}")
+    print(f"label {label_true}")
 
-    alines = concat_alines(
-        alines,
-        codegen_stmts(fn_arg_names, lvar_names, body)
-    )
-    alines.append(f"  jump {label_begin}")
-    alines.append(f"label {label_end}")
-    alines.append("")
-
-    return alines
+    codegen_stmts(fn_arg_names, lvar_names, body)
+    print(f"  jump {label_begin}")
+    print(f"label {label_end}")
+    print("")
 
 def codegen_case(fn_arg_names, lvar_names, when_blocks):
     global g_label_id
 
-    alines = []
     g_label_id += 1
     label_id = g_label_id
 
@@ -404,123 +323,73 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
         rest = when_block[1:]
         cond_head = cond[0]
         cond_rest = cond[1:]
-        alines.append(f"  # 条件 {label_id}_{when_idx}: {cond}")
+        print(f"  # 条件 {label_id}_{when_idx}: {cond}")
 
         if cond_head == "eq":
-            alines = concat_alines(
-                alines,
-                codegen_expr(fn_arg_names, lvar_names, cond)
-            )
+            codegen_expr(fn_arg_names, lvar_names, cond)
 
-            alines.append(f"  set_reg_b 1")
-            alines.append(f"  compare")
-            alines.append(f"  jump_eq {label_when_head}_{when_idx}")
-            alines.append(f"  jump {label_end_when_head}_{when_idx}")
+            print(f"  set_reg_b 1")
+            print(f"  compare")
+            print(f"  jump_eq {label_when_head}_{when_idx}")
+            print(f"  jump {label_end_when_head}_{when_idx}")
 
-            alines.append(f"label {label_when_head}_{when_idx}")
+            print(f"label {label_when_head}_{when_idx}")
 
-            alines = concat_alines(
-                alines,
-                codegen_stmts(fn_arg_names, lvar_names, rest)
-            )
+            codegen_stmts(fn_arg_names, lvar_names, rest)
 
-            alines.append(f"  jump {label_end}")
+            print(f"  jump {label_end}")
 
-            alines.append(f"label {label_end_when_head}_{when_idx}")
+            print(f"label {label_end_when_head}_{when_idx}")
         else:
             raise not_yet_impl("cond_head", cond_head)
 
-    alines.append(f"label {label_end}")
-
-    return alines
+    print(f"label {label_end}")
 
 def codegen_vm_comment(comment):
-    return ["  _cmt " + comment.replace(" ", "~")]
+    print("  _cmt " + comment.replace(" ", "~"))
 
 def codegen_stmt(fn_arg_names, lvar_names, stmt):
-    alines = []
-
     stmt_head = stmt[0]
     stmt_rest = stmt[1:]
 
     if stmt_head == "call":
-        alines = concat_alines(
-            alines,
-            codegen_call(fn_arg_names, lvar_names, stmt_rest)
-        )
+        codegen_call(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "call_set":
-        alines = concat_alines(
-            alines,
-            codegen_call_set(fn_arg_names, lvar_names, stmt_rest)
-        )
+        codegen_call_set(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "set":
-        alines = concat_alines(
-            alines,
-            codegen_set(fn_arg_names, lvar_names, stmt_rest)
-        )
-
+        codegen_set(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "return":
-        alines = concat_alines(
-            alines,
-            codegen_return(fn_arg_names, lvar_names, stmt_rest)
-        )
+        codegen_return(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "case":
-        alines = concat_alines(
-            alines,
-            codegen_case(fn_arg_names, lvar_names, stmt_rest)
-        )
+        codegen_case(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "while":
-        alines = concat_alines(
-            alines,
-            codegen_while(fn_arg_names, lvar_names, stmt_rest)
-        )
+        codegen_while(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "_cmt":
-        alines = concat_alines(
-            alines,
-            codegen_vm_comment(stmt_rest[0])
-        )
+        codegen_vm_comment(stmt_rest[0])
     else:
         raise not_yet_impl("stmt_head", stmt_head)
 
-    return alines
-
 def codegen_stmts(fn_arg_names, lvar_names, stmts):
-    alines = []
-
     for stmt in stmts:
-        alines = concat_alines(
-            alines,
-            codegen_stmt(fn_arg_names, lvar_names, stmt)
-        )
-
-    return alines
+        codegen_stmt(fn_arg_names, lvar_names, stmt)
 
 def codegen_var(fn_arg_names, lvar_names, stmt_rest):
-    alines = []
-
-    alines.append("  sub_sp 1")
+    print("  sub_sp 1")
     if len(stmt_rest) == 2:
-        alines = concat_alines(
-            alines,
-            codegen_set(fn_arg_names, lvar_names, stmt_rest)
-        )
-
-    return alines
+        codegen_set(fn_arg_names, lvar_names, stmt_rest)
 
 def codegen_func_def(rest):
-    alines = []
-
     fn_name = rest[0]
     fn_arg_names = rest[1]
     body = rest[2]
 
-    alines.append("")
-    alines.append(f"label {fn_name}")
-    alines.append("  push bp")
-    alines.append("  cp sp bp")
+    print("")
+    print(f"label {fn_name}")
+    print("  push bp")
+    print("  cp sp bp")
 
-    alines.append("")
-    alines.append("  # 関数の処理本体")
+    print("")
+    print("  # 関数の処理本体")
 
     lvar_names = []
 
@@ -530,60 +399,35 @@ def codegen_func_def(rest):
 
         if stmt_head == "var":
             lvar_names.append(stmt_rest[0])
-            alines = concat_alines(
-                alines,
-                codegen_var(fn_arg_names, lvar_names, stmt_rest)
-            )
+            codegen_var(fn_arg_names, lvar_names, stmt_rest)
         else:
-            alines = concat_alines(
-                alines,
-                codegen_stmt(fn_arg_names, lvar_names, stmt)
-            )
+            codegen_stmt(fn_arg_names, lvar_names, stmt)
 
-    alines.append("")
-    alines.append("  cp bp sp")
-    alines.append("  pop bp")
-    alines.append("  ret")
-
-    return alines
+    print("")
+    print("  cp bp sp")
+    print("  pop bp")
+    print("  ret")
 
 def codegen_top_stmts(rest):
-    alines = []
-
     for stmt in rest:
         stmt_head = stmt[0]
         stmt_rest = stmt[1:]
 
         if stmt_head == "func":
-            alines = concat_alines(
-                alines,
-                codegen_func_def(stmt_rest)
-            )
+            codegen_func_def(stmt_rest)
         elif stmt_head == "_cmt":
-            alines = concat_alines(
-                alines,
-                codegen_vm_comment(stmt_rest[0])
-            )
+            codegen_vm_comment(stmt_rest[0])
         else:
             raise not_yet_impl("stmt_head", stmt_head)
 
-    return alines
-
 def codegen(tree):
-    alines = []
-
-    alines.append("  call main")
-    alines.append("  exit")
+    print("  call main")
+    print("  exit")
 
     head = tree[0]
     rest = tree[1:]
 
-    alines = concat_alines(
-        alines,
-        codegen_top_stmts(rest)
-    )
-
-    return alines
+    codegen_top_stmts(rest)
 
 # --------------------------------
 
@@ -591,7 +435,4 @@ src = read_file(sys.argv[1])
 
 tree = json.loads(src)
 
-alines = codegen(tree)
-
-for aline in alines:
-    print(aline)
+codegen(tree)
