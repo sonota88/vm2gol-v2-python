@@ -393,10 +393,10 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
     label_id = g_label_id
 
     when_idx = -1
-    then_bodies = []
 
     label_end = f"end_case_{label_id}"
     label_when_head = f"when_{label_id}"
+    label_end_when_head = f"end_when_{label_id}"
 
     for when_block in when_blocks:
         when_idx += 1
@@ -415,24 +415,20 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
             alines.append(f"  set_reg_b 1")
             alines.append(f"  compare")
             alines.append(f"  jump_eq {label_when_head}_{when_idx}")
+            alines.append(f"  jump {label_end_when_head}_{when_idx}")
 
-            then_alines = [f"label {label_when_head}_{when_idx}"]
-            then_alines = concat_alines(
-                then_alines,
+            alines.append(f"label {label_when_head}_{when_idx}")
+
+            alines = concat_alines(
+                alines,
                 codegen_stmts(fn_arg_names, lvar_names, rest)
             )
-            then_alines.append(f"  jump {label_end}")
-            then_bodies.append(then_alines)
+
+            alines.append(f"  jump {label_end}")
+
+            alines.append(f"label {label_end_when_head}_{when_idx}")
         else:
             raise not_yet_impl("cond_head", cond_head)
-
-    alines.append(f"  jump {label_end}")
-
-    for then_alines in then_bodies:
-        alines = concat_alines(
-            alines,
-            then_alines
-        )
 
     alines.append(f"label {label_end}")
 
