@@ -274,17 +274,11 @@ class Parser:
     def parse_call(self):
         self.consume("call")
 
-        t = self.peek()
-        self.pos += 1
-        func_name = t.value
-
-        self.consume("(")
-        args = self.parse_args()
-        self.consume(")")
+        funcall = self.parse_funcall()
 
         self.consume(";")
 
-        return ["call", func_name, *args]
+        return ["call", *funcall]
 
     def parse_funcall(self):
         t = self.peek()
