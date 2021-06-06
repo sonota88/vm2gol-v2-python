@@ -7,18 +7,18 @@ label to_vi
 
   # 関数の処理本体
   sub_sp 1
-  push [bp+4]
-  push [bp+2]
+  push [bp:4]
+  push [bp:2]
   pop reg_b
   pop reg_a
   mult_ab
   push reg_a
-  push [bp+3]
+  push [bp:3]
   pop reg_b
   pop reg_a
   add_ab
   push reg_a
-  push [bp+5]
+  push [bp:5]
   pop reg_b
   pop reg_a
   add_ab
@@ -36,14 +36,14 @@ label vram_set
   # 関数の処理本体
   sub_sp 1
   push 0
-  push [bp+4]
-  push [bp+3]
-  push [bp+2]
+  push [bp:4]
+  push [bp:3]
+  push [bp:2]
   _cmt call_set~~to_vi
   call to_vi
   add_sp 4
   cp reg_a [bp-1]
-  set_vram [bp-1] [bp+5]
+  set_vram [bp-1] [bp:5]
 
   cp bp sp
   pop bp
@@ -56,14 +56,14 @@ label vram_set_buf
   # 関数の処理本体
   sub_sp 1
   push 25
-  push [bp+4]
-  push [bp+3]
-  push [bp+2]
+  push [bp:4]
+  push [bp:3]
+  push [bp:2]
   _cmt call_set~~to_vi
   call to_vi
   add_sp 4
   cp reg_a [bp-1]
-  set_vram [bp-1] [bp+5]
+  set_vram [bp-1] [bp:5]
 
   cp bp sp
   pop bp
@@ -76,9 +76,9 @@ label vram_get
   # 関数の処理本体
   sub_sp 1
   push 0
-  push [bp+4]
-  push [bp+3]
-  push [bp+2]
+  push [bp:4]
+  push [bp:3]
+  push [bp:2]
   _cmt call_set~~to_vi
   call to_vi
   add_sp 4
@@ -96,7 +96,7 @@ label adjust_index
   # 関数の処理本体
   sub_sp 1
   # 条件 1_0: ["eq", "i", -1]
-  push [bp+3]
+  push [bp:3]
   push -1
   pop reg_b
   pop reg_a
@@ -113,7 +113,7 @@ label end_eq_2
   jump end_when_1_0
 label when_1_0
   _cmt 下限を超えた場合
-  push [bp+2]
+  push [bp:2]
   push -1
   pop reg_b
   pop reg_a
@@ -122,8 +122,8 @@ label when_1_0
   jump end_case_1
 label end_when_1_0
   # 条件 1_1: ["eq", "i", "width"]
-  push [bp+3]
-  push [bp+2]
+  push [bp:3]
+  push [bp:2]
   pop reg_b
   pop reg_a
   compare
@@ -160,7 +160,7 @@ label end_eq_4
   jump end_when_1_2
 label when_1_2
   _cmt 補正が不要な場合
-  cp [bp+3] [bp-1]
+  cp [bp:3] [bp-1]
   jump end_case_1
 label end_when_1_2
 label end_case_1
@@ -178,7 +178,7 @@ label calc_next_gen
   sub_sp 1
   cp 0 [bp-1]
   # 条件 5_0: ["eq", "current_val", 0]
-  push [bp+2]
+  push [bp:2]
   push 0
   pop reg_b
   pop reg_a
@@ -195,7 +195,7 @@ label end_eq_6
   jump end_when_5_0
 label when_5_0
   # 条件 7_0: ["eq", "count", 3]
-  push [bp+3]
+  push [bp:3]
   push 3
   pop reg_b
   pop reg_a
@@ -235,7 +235,7 @@ label end_eq_9
   jump end_when_5_1
 label when_5_1
   # 条件 10_0: ["eq", "count", 2]
-  push [bp+3]
+  push [bp:3]
   push 2
   pop reg_b
   pop reg_a
@@ -255,7 +255,7 @@ label when_10_0
   jump end_case_10
 label end_when_10_0
   # 条件 10_1: ["eq", "count", 3]
-  push [bp+3]
+  push [bp:3]
   push 3
   pop reg_b
   pop reg_a
@@ -292,28 +292,28 @@ label count_alive
   sub_sp 1
   cp 0 [bp-1]
   sub_sp 1
-  push [bp+4]
+  push [bp:4]
   push -1
   pop reg_b
   pop reg_a
   add_ab
   cp reg_a [bp-2]
   sub_sp 1
-  push [bp+4]
+  push [bp:4]
   push 1
   pop reg_b
   pop reg_a
   add_ab
   cp reg_a [bp-3]
   sub_sp 1
-  push [bp+5]
+  push [bp:5]
   push -1
   pop reg_b
   pop reg_a
   add_ab
   cp reg_a [bp-4]
   sub_sp 1
-  push [bp+5]
+  push [bp:5]
   push 1
   pop reg_b
   pop reg_a
@@ -321,7 +321,7 @@ label count_alive
   cp reg_a [bp-5]
   _cmt ★~xl~の補正の直前
   push [bp-2]
-  push [bp+2]
+  push [bp:2]
   _cmt call_set~~adjust_index
   call adjust_index
   add_sp 2
@@ -329,7 +329,7 @@ label count_alive
   _cmt ★~xl~の補正の直後
   _cmt ★~xr~の補正の直前
   push [bp-3]
-  push [bp+2]
+  push [bp:2]
   _cmt call_set~~adjust_index
   call adjust_index
   add_sp 2
@@ -337,7 +337,7 @@ label count_alive
   _cmt ★~xr~の補正の直後
   _cmt ★~yt~の補正の直前
   push [bp-4]
-  push [bp+3]
+  push [bp:3]
   _cmt call_set~~adjust_index
   call adjust_index
   add_sp 2
@@ -345,7 +345,7 @@ label count_alive
   _cmt ★~yt~の補正の直後
   _cmt ★~yb~の補正の直前
   push [bp-5]
-  push [bp+3]
+  push [bp:3]
   _cmt call_set~~adjust_index
   call adjust_index
   add_sp 2
@@ -356,7 +356,7 @@ label count_alive
   _cmt 左上
   push [bp-4]
   push [bp-2]
-  push [bp+2]
+  push [bp:2]
   _cmt call_set~~vram_get
   call vram_get
   add_sp 3
@@ -369,8 +369,8 @@ label count_alive
   cp reg_a [bp-1]
   _cmt 上
   push [bp-4]
-  push [bp+4]
-  push [bp+2]
+  push [bp:4]
+  push [bp:2]
   _cmt call_set~~vram_get
   call vram_get
   add_sp 3
@@ -384,7 +384,7 @@ label count_alive
   _cmt 右上
   push [bp-4]
   push [bp-3]
-  push [bp+2]
+  push [bp:2]
   _cmt call_set~~vram_get
   call vram_get
   add_sp 3
@@ -396,9 +396,9 @@ label count_alive
   add_ab
   cp reg_a [bp-1]
   _cmt 左
-  push [bp+5]
+  push [bp:5]
   push [bp-2]
-  push [bp+2]
+  push [bp:2]
   _cmt call_set~~vram_get
   call vram_get
   add_sp 3
@@ -410,9 +410,9 @@ label count_alive
   add_ab
   cp reg_a [bp-1]
   _cmt 右
-  push [bp+5]
+  push [bp:5]
   push [bp-3]
-  push [bp+2]
+  push [bp:2]
   _cmt call_set~~vram_get
   call vram_get
   add_sp 3
@@ -426,7 +426,7 @@ label count_alive
   _cmt 左下
   push [bp-5]
   push [bp-2]
-  push [bp+2]
+  push [bp:2]
   _cmt call_set~~vram_get
   call vram_get
   add_sp 3
@@ -439,8 +439,8 @@ label count_alive
   cp reg_a [bp-1]
   _cmt 下
   push [bp-5]
-  push [bp+4]
-  push [bp+2]
+  push [bp:4]
+  push [bp:2]
   _cmt call_set~~vram_get
   call vram_get
   add_sp 3
@@ -454,7 +454,7 @@ label count_alive
   _cmt 右下
   push [bp-5]
   push [bp-3]
-  push [bp+2]
+  push [bp:2]
   _cmt call_set~~vram_get
   call vram_get
   add_sp 3
@@ -487,7 +487,7 @@ label make_next_gen
 
 label while_13
   push [bp-2]
-  push [bp+3]
+  push [bp:3]
   pop reg_b
   pop reg_a
   compare
@@ -506,7 +506,7 @@ label true_13
 
 label while_15
   push [bp-1]
-  push [bp+2]
+  push [bp:2]
   pop reg_b
   pop reg_a
   compare
@@ -523,8 +523,8 @@ label end_neq_16
 label true_15
   push [bp-2]
   push [bp-1]
-  push [bp+3]
-  push [bp+2]
+  push [bp:3]
+  push [bp:2]
   _cmt call_set~~count_alive
   call count_alive
   add_sp 4
@@ -533,7 +533,7 @@ label true_15
   _cmt ★次世代の生死決定の直前
   push [bp-2]
   push [bp-1]
-  push [bp+2]
+  push [bp:2]
   _cmt call_set~~vram_get
   call vram_get
   add_sp 3
@@ -548,7 +548,7 @@ label true_15
   push [bp-5]
   push [bp-2]
   push [bp-1]
-  push [bp+2]
+  push [bp:2]
   _cmt call~~vram_set_buf
   call vram_set_buf
   add_sp 4

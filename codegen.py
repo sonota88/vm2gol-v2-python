@@ -30,7 +30,7 @@ g_label_id = 0
 
 def to_fn_arg_addr(fn_arg_names, fn_arg_name):
     i = fn_arg_names.index(fn_arg_name)
-    return f"[bp+{i+2}]"
+    return f"[bp:{i+2}]"
 
 def to_lvar_addr(lvar_names, lvar_name):
     i = lvar_names.index(lvar_name)
