@@ -122,6 +122,16 @@ def codegen_expr(fn_arg_names, lvar_names, expr):
         elif expr in lvar_names:
             cp_src = to_lvar_addr(lvar_names, expr)
             print(f"  cp {cp_src} reg_a")
+        elif _match_vram_addr(expr):
+            vram_addr = _match_vram_addr(expr)
+            print(f"  get_vram {vram_addr} reg_a")
+        elif _match_vram_ref(expr):
+            var_name = _match_vram_ref(expr)
+            if var_name in lvar_names:
+                lvar_addr = to_lvar_addr(lvar_names, var_name)
+                print(f"  get_vram {lvar_addr} reg_a")
+            else:
+                raise not_yet_impl("expr", expr)
         else:
             raise not_yet_impl("expr", expr)
     elif type(expr) == list:
