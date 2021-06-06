@@ -130,7 +130,9 @@ def _codegen_expr_neq():
     print(f"label {label_end}")
 
 def codegen_expr(fn_arg_names, lvar_names, expr):
-    if type(expr) == list:
+    if type(expr) == int:
+        print(f"  cp {expr} reg_a")
+    elif type(expr) == list:
         _codegen_expr_binary(fn_arg_names, lvar_names, expr)
     else:
         raise Exception("expr", expr)
