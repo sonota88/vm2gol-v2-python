@@ -345,9 +345,13 @@ def codegen_while(fn_arg_names, lvar_names, rest):
     g_label_id += 1
     label_id = g_label_id
 
+    label_begin = f"while_{label_id}"
+    label_end = f"end_while_{label_id}"
+    label_true = f"true_{label_id}"
+
     alines.append("")
 
-    alines.append(f"label while_{label_id}")
+    alines.append(f"label {label_begin}")
 
     alines = concat_alines(
         alines,
@@ -357,18 +361,18 @@ def codegen_while(fn_arg_names, lvar_names, rest):
     alines.append(f"  set_reg_b 1")
     alines.append(f"  compare")
 
-    alines.append(f"  jump_eq true_{label_id}")
+    alines.append(f"  jump_eq {label_true}")
 
-    alines.append(f"  jump end_while_{label_id}")
+    alines.append(f"  jump {label_end}")
 
-    alines.append(f"label true_{label_id}")
+    alines.append(f"label {label_true}")
 
     alines = concat_alines(
         alines,
         codegen_stmts(fn_arg_names, lvar_names, body)
     )
-    alines.append(f"  jump while_{label_id}")
-    alines.append(f"label end_while_{label_id}")
+    alines.append(f"  jump {label_begin}")
+    alines.append(f"label {label_end}")
     alines.append("")
 
     return alines
