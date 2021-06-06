@@ -34,7 +34,7 @@ def to_fn_arg_addr(fn_arg_names, fn_arg_name):
 
 def to_lvar_addr(lvar_names, lvar_name):
     i = lvar_names.index(lvar_name)
-    return f"[bp-{i+1}]"
+    return f"[bp:-{i+1}]"
 
 def _match_vram_addr(s):
     pattern = r"vram\[(\d+)\]"
