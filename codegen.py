@@ -132,6 +132,15 @@ def _codegen_expr_neq():
 def codegen_expr(fn_arg_names, lvar_names, expr):
     if type(expr) == int:
         print(f"  cp {expr} reg_a")
+    elif type(expr) == str:
+        if expr in fn_arg_names:
+            cp_src = to_fn_arg_addr(fn_arg_names, expr)
+            print(f"  cp {cp_src} reg_a")
+        elif expr in lvar_names:
+            cp_src = to_lvar_addr(lvar_names, expr)
+            print(f"  cp {cp_src} reg_a")
+        else:
+            raise not_yet_impl("expr", expr)
     elif type(expr) == list:
         _codegen_expr_binary(fn_arg_names, lvar_names, expr)
     else:
