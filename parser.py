@@ -408,8 +408,7 @@ class Parser:
         stmts = []
 
         while self.peek().value != "}":
-            stmt = self.parse_stmt()
-            stmts.append(stmt)
+            stmts.append(self.parse_stmt())
 
         return stmts
 
