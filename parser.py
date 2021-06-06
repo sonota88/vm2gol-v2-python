@@ -167,7 +167,14 @@ class Parser:
         self.consume(")")
 
         self.consume("{")
-        stmts = self.parse_stmts()
+
+        stmts = []
+        while self.peek().value != "}":
+            if self.peek().value == "var":
+                stmts.append(self.parse_var())
+            else:
+                stmts.append(self.parse_stmt())
+
         self.consume("}")
 
         return ["func", func_name, args, stmts]
@@ -384,8 +391,6 @@ class Parser:
             return None
         elif t.value == "func":
             return self.parse_func()
-        elif t.value == "var":
-            return self.parse_var()
         elif t.value == "set":
             return self.parse_set()
         elif t.value == "call":
