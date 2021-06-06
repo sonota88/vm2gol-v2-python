@@ -389,8 +389,6 @@ class Parser:
             return None
         elif t.value == "when": # case の場合に出現
             return None
-        elif t.value == "func":
-            return self.parse_func()
         elif t.value == "set":
             return self.parse_set()
         elif t.value == "call":
