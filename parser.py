@@ -38,351 +38,372 @@ def read_tokens(path):
 
 # --------------------------------
 
+tokens = None
+pos = 0
+
 def not_yet_impl(k, v):
     return Exception(f"{k} ({v})")
 
 def parse_error(val=None):
     return Exception("parse error " + inspect(val))
 
-class Parser:
-    def __init__(self, tokens):
-        self.tokens = tokens
-        self.pos = 0
+def is_end():
+    return len(tokens) <= pos
 
-    def is_end(self):
-        return len(self.tokens) <= self.pos
+def peek(offset = 0):
+    global tokens
+    global pos
 
-    def peek(self, offset = 0):
-        return self.tokens[self.pos + offset]
+    return tokens[pos + offset]
 
-    def rest_head(self):
-        return list(
-            map(lambda t: f"{t.type}<{t.value}>", (
-                self.tokens[self.pos : self.pos + 8]
-            ))
-        )
+def rest_head():
+    return list(
+        map(lambda t: f"{t.type}<{t.value}>", (
+            tokens[pos : pos + 8]
+        ))
+    )
 
-    def dump_state(self, msg=""):
-        p_e([
-            msg, self.pos, self.rest_head()
-        ])
+def dump_state(msg=""):
+    p_e([
+        msg, pos, rest_head()
+    ])
 
-    def assert_value(self, pos, exp):
-        t = self.peek()
+def assert_value(pos, exp):
+    t = peek()
 
-        if t.value != exp:
-            msg = f"Assersion failed: expected({inspect(exp)}) actual({inspect(t)})"
-            raise Exception(msg)
+    if t.value != exp:
+        msg = f"Assersion failed: expected({inspect(exp)}) actual({inspect(t)})"
+        raise Exception(msg)
 
-    def consume(self, s):
-        self.assert_value(self.pos, s)
-        self.pos += 1
+def consume(s):
+    global pos
 
-    # --------------------------------
+    assert_value(pos, s)
+    pos += 1
 
-    def _parse_arg(self):
-        t = self.peek()
-        if t.type == "ident":
-            self.pos += 1
-            return t.value
-        elif t.type == "int":
-            self.pos += 1
-            return int(t.value)
-        else:
-            raise parse_error(t)
+# --------------------------------
 
-    def parse_args(self):
-        args = []
+def _parse_arg():
+    global pos
 
-        if self.peek().value == ")":
-            return args
+    t = peek()
+    if t.type == "ident":
+        pos += 1
+        return t.value
+    elif t.type == "int":
+        pos += 1
+        return int(t.value)
+    else:
+        raise parse_error(t)
 
-        args.append(self._parse_arg())
+def parse_args():
+    args = []
 
-        while(self.peek().value == ","):
-            self.consume(",")
-            args.append(self._parse_arg())
-
+    if peek().value == ")":
         return args
 
-    def parse_func(self):
-        self.consume("func")
+    args.append(_parse_arg())
 
-        t = self.peek()
-        self.pos += 1
-        func_name = t.value
+    while(peek().value == ","):
+        consume(",")
+        args.append(_parse_arg())
 
-        self.consume("(")
-        args = self.parse_args()
-        self.consume(")")
+    return args
 
-        self.consume("{")
+def parse_func():
+    global pos
 
-        stmts = []
-        while self.peek().value != "}":
-            if self.peek().value == "var":
-                stmts.append(self.parse_var())
-            else:
-                stmts.append(self.parse_stmt())
+    consume("func")
 
-        self.consume("}")
+    t = peek()
+    pos += 1
+    func_name = t.value
 
-        return ["func", func_name, args, stmts]
+    consume("(")
+    args = parse_args()
+    consume(")")
 
-    def parse_var_declare(self):
-        t = self.peek()
-        self.pos += 1
-        var_name = t.value
+    consume("{")
 
-        self.consume(";")
-
-        return ["var", var_name]
-
-    def parse_var_init(self):
-        t = self.peek()
-        self.pos += 1
-        var_name = t.value
-
-        self.consume("=")
-
-        expr = self.parse_expr()
-
-        self.consume(";")
-
-        return ["var", var_name, expr]
-
-    def parse_var(self):
-        self.consume("var")
-
-        t = self.peek(1)
-
-        if t.value == ";":
-            return self.parse_var_declare()
-        elif t.value == "=":
-            return self.parse_var_init()
+    stmts = []
+    while peek().value != "}":
+        if peek().value == "var":
+            stmts.append(parse_var())
         else:
-            raise parse_error(t)
+            stmts.append(parse_stmt())
 
-    def parse_expr_right(self, expr_l):
-        t = self.peek()
+    consume("}")
 
-        if t.value == ";" or t.value == ")":
-            return expr_l
+    return ["func", func_name, args, stmts]
 
-        if t.value == "+":
-            self.consume("+")
-            expr_r = self.parse_expr()
-            return ["+", expr_l, expr_r]
-        elif t.value == "*":
-            self.consume("*")
-            expr_r = self.parse_expr()
-            return ["*", expr_l, expr_r]
-        elif t.value == "==":
-            self.consume("==")
-            expr_r = self.parse_expr()
-            return ["eq", expr_l, expr_r]
-        elif t.value == "!=":
-            self.consume("!=")
-            expr_r = self.parse_expr()
-            return ["neq", expr_l, expr_r]
+def parse_var_declare():
+    global pos
+
+    t = peek()
+    pos += 1
+    var_name = t.value
+
+    consume(";")
+
+    return ["var", var_name]
+
+def parse_var_init():
+    global pos
+
+    t = peek()
+    pos += 1
+    var_name = t.value
+
+    consume("=")
+
+    expr = parse_expr()
+
+    consume(";")
+
+    return ["var", var_name, expr]
+
+def parse_var():
+    consume("var")
+
+    t = peek(1)
+
+    if t.value == ";":
+        return parse_var_declare()
+    elif t.value == "=":
+        return parse_var_init()
+    else:
+        raise parse_error(t)
+
+def parse_expr_right(expr_l):
+    t = peek()
+
+    if t.value == ";" or t.value == ")":
+        return expr_l
+
+    if t.value == "+":
+        consume("+")
+        expr_r = parse_expr()
+        return ["+", expr_l, expr_r]
+    elif t.value == "*":
+        consume("*")
+        expr_r = parse_expr()
+        return ["*", expr_l, expr_r]
+    elif t.value == "==":
+        consume("==")
+        expr_r = parse_expr()
+        return ["eq", expr_l, expr_r]
+    elif t.value == "!=":
+        consume("!=")
+        expr_r = parse_expr()
+        return ["neq", expr_l, expr_r]
+    else:
+        raise parse_error(t)
+
+
+def parse_expr():
+    global pos
+
+    t_left = peek()
+
+    if t_left.value == "(":
+        consume("(")
+        expr_l = parse_expr()
+        consume(")")
+        return parse_expr_right(expr_l)
+
+    if t_left.type == "int" or t_left.type == "ident":
+        pos += 1
+
+        if t_left.type == "int":
+            expr_l = int(t_left.value)
+        elif t_left.type == "ident":
+            expr_l = t_left.value
         else:
-            raise parse_error(t)
-            
+            raise Exception("invalid type")
 
-    def parse_expr(self):
-        t_left = self.peek()
+        return parse_expr_right(expr_l)
+    else:
+        raise parse_error()
 
-        if t_left.value == "(":
-            self.consume("(")
-            expr_l = self.parse_expr()
-            self.consume(")")
-            return self.parse_expr_right(expr_l)
+def parse_set():
+    global pos
 
-        if t_left.type == "int" or t_left.type == "ident":
-            self.pos += 1
+    consume("set")
 
-            if t_left.type == "int":
-                expr_l = int(t_left.value)
-            elif t_left.type == "ident":
-                expr_l = t_left.value
-            else:
-                raise Exception("invalid type")
+    t = peek()
+    pos += 1
+    var_name = t.value
 
-            return self.parse_expr_right(expr_l)
+    consume("=")
+
+    expr = parse_expr()
+
+    consume(";")
+
+    return ["set", var_name, expr]
+
+def parse_call():
+    consume("call")
+
+    funcall = parse_funcall()
+
+    consume(";")
+
+    return ["call", *funcall]
+
+def parse_funcall():
+    global pos
+
+    t = peek()
+    pos += 1
+    func_name = t.value
+
+    consume("(")
+    args = parse_args()
+    consume(")")
+
+    return [func_name, *args]
+
+def parse_call_set():
+    global pos
+
+    consume("call_set")
+
+    t = peek()
+    pos += 1
+    var_name = t.value
+
+    consume("=")
+
+    expr = parse_funcall()
+
+    consume(";")
+
+    return ["call_set", var_name, expr]
+
+def parse_return():
+    consume("return")
+
+    t = peek()
+
+    expr = parse_expr()
+    consume(";")
+
+    return ["return", expr]
+
+def parse_while():
+    consume("while")
+
+    consume("(")
+    expr = parse_expr()
+    consume(")")
+
+    consume("{")
+    stmts = parse_stmts()
+    consume("}")
+
+    return ["while", expr, stmts]
+
+def _parse_when_clause():
+    t = peek()
+    if t.value == "}":
+        return None
+
+    consume("when")
+    consume("(")
+    expr = parse_expr()
+    consume(")")
+
+    consume("{")
+    stmts = parse_stmts()
+    consume("}")
+
+    return [expr, *stmts]
+
+def parse_case():
+    consume("case")
+
+    consume("{")
+
+    when_clauses = []
+
+    while(True):
+        when_clause = _parse_when_clause()
+        if when_clause is None:
+            break
         else:
-            raise parse_error()
+            when_clauses.append(when_clause)
 
-    def parse_set(self):
-        self.consume("set")
+    consume("}")
 
-        t = self.peek()
-        self.pos += 1
-        var_name = t.value
+    return ["case", *when_clauses]
 
-        self.consume("=")
+def parse_vm_comment():
+    global pos
 
-        expr = self.parse_expr()
+    consume("_cmt")
+    consume("(")
 
-        self.consume(";")
-        
-        return ["set", var_name, expr]
+    t = peek()
+    pos += 1
+    comment = t.value
 
-    def parse_call(self):
-        self.consume("call")
+    consume(")")
+    consume(";")
 
-        funcall = self.parse_funcall()
+    return ["_cmt", comment]
 
-        self.consume(";")
+def parse_stmt():
+    t = peek()
 
-        return ["call", *funcall]
+    if t.value == "when": # case の場合に出現
+        return None
+    elif t.value == "set":
+        return parse_set()
+    elif t.value == "call":
+        return parse_call()
+    elif t.value == "call_set":
+        return parse_call_set()
+    elif t.value == "return":
+        return parse_return()
+    elif t.value == "while":
+        return parse_while()
+    elif t.value == "case":
+        return parse_case()
+    elif t.value == "_cmt":
+        return parse_vm_comment()
+    else:
+        raise Exception("parse error")
 
-    def parse_funcall(self):
-        t = self.peek()
-        self.pos += 1
-        func_name = t.value
+def parse_stmts():
+    stmts = []
 
-        self.consume("(")
-        args = self.parse_args()
-        self.consume(")")
+    while peek().value != "}":
+        stmts.append(parse_stmt())
 
-        return [func_name, *args]
+    return stmts
 
-    def parse_call_set(self):
-        self.consume("call_set")
+def parse_top_stmt():
+    if peek().value == "func":
+        return parse_func()
+    else:
+        raise Exception("unexpected token")
 
-        t = self.peek()
-        self.pos += 1
-        var_name = t.value
+def parse_top_stmts():
+    stmts = []
+    while not is_end():
+        stmts.append(parse_top_stmt())
 
-        self.consume("=")
+    return stmts
 
-        expr = self.parse_funcall()
+def parse():
+    try:
+        stmts = parse_top_stmts()
+    except Exception as e:
+        dump_state()
+        raise e
 
-        self.consume(";")
-
-        return ["call_set", var_name, expr]
-
-    def parse_return(self):
-        self.consume("return")
-
-        t = self.peek()
-
-        expr = self.parse_expr()
-        self.consume(";")
-
-        return ["return", expr]
-
-    def parse_while(self):
-        self.consume("while")
-
-        self.consume("(")
-        expr = self.parse_expr()
-        self.consume(")")
-
-        self.consume("{")
-        stmts = self.parse_stmts()
-        self.consume("}")
-
-        return ["while", expr, stmts]
-
-    def _parse_when_clause(self):
-        t = self.peek()
-        if t.value == "}":
-            return None
-
-        self.consume("when")
-        self.consume("(")
-        expr = self.parse_expr()
-        self.consume(")")
-
-        self.consume("{")
-        stmts = self.parse_stmts()
-        self.consume("}")
-
-        return [expr, *stmts]
-
-    def parse_case(self):
-        self.consume("case")
-
-        self.consume("{")
-
-        when_clauses = []
-
-        while(True):
-            when_clause = self._parse_when_clause()
-            if when_clause is None:
-                break
-            else:
-                when_clauses.append(when_clause)
-
-        self.consume("}")
-
-        return ["case", *when_clauses]
-
-    def parse_vm_comment(self):
-        self.consume("_cmt")
-        self.consume("(")
-
-        t = self.peek()
-        self.pos += 1
-        comment = t.value
-
-        self.consume(")")
-        self.consume(";")
-
-        return ["_cmt", comment]
-
-    def parse_stmt(self):
-        t = self.peek()
-
-        if t.value == "when": # case の場合に出現
-            return None
-        elif t.value == "set":
-            return self.parse_set()
-        elif t.value == "call":
-            return self.parse_call()
-        elif t.value == "call_set":
-            return self.parse_call_set()
-        elif t.value == "return":
-            return self.parse_return()
-        elif t.value == "while":
-            return self.parse_while()
-        elif t.value == "case":
-            return self.parse_case()
-        elif t.value == "_cmt":
-            return self.parse_vm_comment()
-        else:
-            raise Exception("parse error")
-
-    def parse_stmts(self):
-        stmts = []
-
-        while self.peek().value != "}":
-            stmts.append(self.parse_stmt())
-
-        return stmts
-
-    def parse_top_stmt(self):
-        if self.peek().value == "func":
-            return self.parse_func()
-        else:
-            raise Exception("unexpected token")
-
-    def parse_top_stmts(self):
-        stmts = []
-        while not self.is_end():
-            stmts.append(self.parse_top_stmt())
-
-        return stmts
-
-    def parse(self):
-        try:
-            stmts = self.parse_top_stmts()
-        except Exception as e:
-            self.dump_state()
-            raise e
-            
-        return ["top_stmts", *stmts]
+    return ["top_stmts", *stmts]
 
 # --------------------------------
 
@@ -390,8 +411,7 @@ in_file = sys.argv[1]
 tokens = read_tokens(in_file)
 # p_e(tokens)
 
-parser = Parser(tokens)
-tree = parser.parse()
+tree = parse()
 # p_e(tree)
 
 print(to_json(tree))
