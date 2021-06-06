@@ -102,8 +102,8 @@ class Parser:
     def is_end(self):
         return len(self.tokens) <= self.pos
 
-    def peek(self):
-        return self.tokens[self.pos]
+    def peek(self, offset = 0):
+        return self.tokens[self.pos + offset]
 
     def rest_head(self):
         return list(
