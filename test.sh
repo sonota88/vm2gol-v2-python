@@ -11,6 +11,7 @@ print_project_dir() {
 export PROJECT_DIR="$(print_project_dir)"
 export TEST_DIR="${PROJECT_DIR}/test"
 export TEMP_DIR="${PROJECT_DIR}/z_tmp"
+export TEMP_TOKENS_FILE="${TEMP_DIR}/test.tokens.txt"
 export TEMP_VGT_FILE="${TEMP_DIR}/test.vgt.json"
 export TEMP_VGA_FILE="${TEMP_DIR}/test.vga.txt"
 
@@ -23,7 +24,8 @@ test_nn() {
 
   local exp_file="${TEST_DIR}/compile/exp_${nn}.vga.txt"
 
-  python parser.py ${TEST_DIR}/compile/${nn}.vg.txt > $TEMP_VGT_FILE
+  python lexer.py ${TEST_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
+  python parser.py $TEMP_TOKENS_FILE > $TEMP_VGT_FILE
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_parse"
     return
