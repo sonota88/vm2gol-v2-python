@@ -198,35 +198,8 @@ def codegen_set(fn_arg_names, lvar_names, rest):
     dest = rest[0]
     expr = rest[1]
 
-    src_val = None
-
-    if type(expr) == int:
-        src_val = expr
-    elif type(expr) == list:
-        _codegen_expr_binary(fn_arg_names, lvar_names, expr)
-        src_val = "reg_a"
-    elif type(expr) == str:
-        if expr in fn_arg_names:
-            src_val = to_fn_arg_addr(fn_arg_names, expr)
-        elif expr in lvar_names:
-            src_val = to_lvar_addr(lvar_names, expr)
-        elif _match_vram_addr(expr):
-            vram_addr = _match_vram_addr(expr)
-            print(f"  get_vram {vram_addr} reg_a")
-            src_val = "reg_a"
-        elif _match_vram_ref(expr):
-            var_name = _match_vram_ref(expr)
-            if var_name in lvar_names:
-                lvar_addr = to_lvar_addr(lvar_names, var_name)
-                print(f"  get_vram {lvar_addr} reg_a")
-            else:
-                raise not_yet_impl("expr", expr)
-
-            src_val = "reg_a"
-        else:
-            raise not_yet_impl("expr", expr)
-    else:
-        raise not_yet_impl("expr", expr)
+    codegen_expr(fn_arg_names, lvar_names, expr)
+    src_val = "reg_a"
 
     if _match_vram_addr(dest):
         vram_addr = _match_vram_addr(dest)
