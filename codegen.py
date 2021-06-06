@@ -114,19 +114,22 @@ def _codegen_exp_eq():
     g_label_id += 1
     label_id = g_label_id
 
+    label_end = f"end_eq_{label_id}"
+    label_then = f"then_{label_id}"
+
     alines.append(f"  pop reg_b")
     alines.append(f"  pop reg_a")
 
     alines.append(f"  compare")
-    alines.append(f"  jump_eq then_{label_id}")
+    alines.append(f"  jump_eq {label_then}")
 
     alines.append(f"  set_reg_a 0")
-    alines.append(f"  jump end_eq_{label_id}")
+    alines.append(f"  jump {label_end}")
 
-    alines.append(f"label then_{label_id}")
+    alines.append(f"label {label_then}")
     alines.append(f"  set_reg_a 1")
 
-    alines.append(f"label end_eq_{label_id}")
+    alines.append(f"label {label_end}")
 
     return alines
 
@@ -138,19 +141,22 @@ def _codegen_exp_neq():
     g_label_id += 1
     label_id = g_label_id
 
+    label_end = f"end_neq_{label_id}"
+    label_then = f"then_{label_id}"
+
     alines.append(f"  pop reg_b")
     alines.append(f"  pop reg_a")
 
     alines.append(f"  compare")
-    alines.append(f"  jump_eq then_{label_id}")
+    alines.append(f"  jump_eq {label_then}")
 
     alines.append(f"  set_reg_a 1")
-    alines.append(f"  jump end_neq_{label_id}")
+    alines.append(f"  jump {label_end}")
 
-    alines.append(f"label then_{label_id}")
+    alines.append(f"label {label_then}")
     alines.append(f"  set_reg_a 0")
 
-    alines.append(f"label end_neq_{label_id}")
+    alines.append(f"label {label_end}")
 
     return alines
 
