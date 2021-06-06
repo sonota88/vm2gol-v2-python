@@ -238,7 +238,7 @@ def codegen_while(fn_arg_names, lvar_names, rest):
 
     print(f"label {label_begin}")
 
-    _codegen_expr_binary(fn_arg_names, lvar_names, cond_expr)
+    codegen_expr(fn_arg_names, lvar_names, cond_expr)
 
     print(f"  set_reg_b 1")
     print(f"  compare")
@@ -275,7 +275,7 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
         print(f"  # 条件 {label_id}_{when_idx}: {cond}")
 
         if cond_head == "eq":
-            _codegen_expr_binary(fn_arg_names, lvar_names, cond)
+            codegen_expr(fn_arg_names, lvar_names, cond)
 
             print(f"  set_reg_b 1")
             print(f"  compare")
