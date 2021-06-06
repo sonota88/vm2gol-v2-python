@@ -497,6 +497,18 @@ def codegen_stmts(fn_arg_names, lvar_names, stmts):
 
     return alines
 
+def codegen_var(fn_arg_names, lvar_names, stmt_rest):
+    alines = []
+
+    alines.append("  sub_sp 1")
+    if len(stmt_rest) == 2:
+        alines = concat_alines(
+            alines,
+            codegen_set(fn_arg_names, lvar_names, stmt_rest)
+        )
+
+    return alines
+
 def codegen_func_def(rest):
     alines = []
 
@@ -520,12 +532,10 @@ def codegen_func_def(rest):
 
         if stmt_head == "var":
             lvar_names.append(stmt_rest[0])
-            alines.append("  sub_sp 1")
-            if len(stmt_rest) == 2:
-                alines = concat_alines(
-                    alines,
-                    codegen_set(fn_arg_names, lvar_names, stmt_rest)
-                )
+            alines = concat_alines(
+                alines,
+                codegen_var(fn_arg_names, lvar_names, stmt_rest)
+            )
         else:
             alines = concat_alines(
                 alines,
