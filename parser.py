@@ -385,9 +385,7 @@ class Parser:
     def parse_stmt(self):
         t = self.peek()
 
-        if t.value == "}":
-            return None
-        elif t.value == "when": # case の場合に出現
+        if t.value == "when": # case の場合に出現
             return None
         elif t.value == "set":
             return self.parse_set()
@@ -409,14 +407,8 @@ class Parser:
     def parse_stmts(self):
         stmts = []
 
-        while(True):
-            if self.is_end():
-                break
-
+        while self.peek().value != "}":
             stmt = self.parse_stmt()
-            if stmt == None:
-                break
-
             stmts.append(stmt)
 
         return stmts
