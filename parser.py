@@ -99,6 +99,9 @@ class Parser:
         self.tokens = tokens
         self.pos = 0
 
+    def is_end(self):
+        return len(self.tokens) <= self.pos
+
     def peek(self):
         return self.tokens[self.pos]
 
@@ -399,9 +402,6 @@ class Parser:
             return self.parse_vm_comment()
         else:
             raise Exception("parse error")
-
-    def is_end(self):
-        return len(self.tokens) <= self.pos
 
     def parse_stmts(self):
         stmts = []
