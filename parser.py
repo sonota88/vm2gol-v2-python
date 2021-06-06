@@ -48,9 +48,9 @@ def tokenize(src):
     re_space = r"([ \n]+)"
     re_comment = r"(//.*)\n"
     re_str = r"\"(.*)\""
-    re_reserved = r"(func|set|var|call_set|call|return|case|while|when|_cmt)[^a-z_]"
+    re_kw = r"(func|set|var|call_set|call|return|case|while|when|_cmt)[^a-z_]"
     re_int = r"(-?[0-9]+)"
-    re_symbol = r"(==|!=|[(){}=;+*,])"
+    re_sym = r"(==|!=|[(){}=;+*,])"
     re_ident = r"([a-z_][a-z0-9_\[\]]*)"
 
     while pos < len(src):
@@ -67,22 +67,22 @@ def tokenize(src):
         elif re.match(re_str, rest):
             m = re.match(re_str, rest)
             s = m.group(1)
-            tokens.append( Token("string", s) )
+            tokens.append( Token("str", s) )
             pos += len(s) + 2
-        elif re.match(re_reserved, rest):
-            m = re.match(re_reserved, rest)
+        elif re.match(re_kw, rest):
+            m = re.match(re_kw, rest)
             s = m.group(1)
-            tokens.append( Token("reserved", s) )
+            tokens.append( Token("kw", s) )
             pos += len(s)
         elif re.match(re_int, rest):
             m = re.match(re_int, rest)
             s = m.group(1)
             tokens.append( Token("int", int(s)) )
             pos += len(s)
-        elif re.match(re_symbol, rest):
-            m = re.match(re_symbol, rest)
+        elif re.match(re_sym, rest):
+            m = re.match(re_sym, rest)
             s = m.group(1)
-            tokens.append( Token("symbol", s) )
+            tokens.append( Token("sym", s) )
             pos += len(s)
         elif re.match(re_ident, rest):
             m = re.match(re_ident, rest)
