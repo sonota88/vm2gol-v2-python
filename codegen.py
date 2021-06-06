@@ -196,19 +196,21 @@ def codegen_expr(fn_arg_names, lvar_names, expr):
 def _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg):
     alines = []
 
+    push_arg = None
+
     if type(fn_arg) == int:
-        alines.append(f"  push {fn_arg}")
+        push_arg = fn_arg
     elif type(fn_arg) == str:
         if fn_arg in fn_arg_names:
-            addr = to_fn_arg_addr(fn_arg_names, fn_arg)
-            alines.append(f"  push {addr}")
+            push_arg = to_fn_arg_addr(fn_arg_names, fn_arg)
         elif fn_arg in lvar_names:
-            addr = to_lvar_addr(lvar_names, fn_arg)
-            alines.append(f"  push {addr}")
+            push_arg = to_lvar_addr(lvar_names, fn_arg)
         else:
             raise not_yet_impl("fn_arg", fn_arg)
     else:
         raise not_yet_impl("fn_arg", fn_arg)
+
+    alines.append(f"  push {push_arg}") 
 
     return alines
 
