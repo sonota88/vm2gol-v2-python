@@ -69,7 +69,7 @@ def _codegen_expr_push(fn_arg_names, lvar_names, val):
         else:
             raise not_yet_impl("todo", val)
     elif type(val) == list:
-        codegen_expr(fn_arg_names, lvar_names, val)
+        _codegen_expr_binary(fn_arg_names, lvar_names, val)
         push_arg = "reg_a"
     else:
         raise not_yet_impl("todo", val)
@@ -132,7 +132,7 @@ def _codegen_expr_neq():
 
     print(f"label {label_end}")
 
-def codegen_expr(fn_arg_names, lvar_names, expr):
+def _codegen_expr_binary(fn_arg_names, lvar_names, expr):
     global g_label_id
 
     operator = expr[0]
@@ -209,7 +209,7 @@ def codegen_set(fn_arg_names, lvar_names, rest):
     if type(expr) == int:
         src_val = expr
     elif type(expr) == list:
-        codegen_expr(fn_arg_names, lvar_names, expr)
+        _codegen_expr_binary(fn_arg_names, lvar_names, expr)
         src_val = "reg_a"
     elif type(expr) == str:
         if expr in fn_arg_names:
@@ -289,7 +289,7 @@ def codegen_while(fn_arg_names, lvar_names, rest):
 
     print(f"label {label_begin}")
 
-    codegen_expr(fn_arg_names, lvar_names, cond_expr)
+    _codegen_expr_binary(fn_arg_names, lvar_names, cond_expr)
 
     print(f"  set_reg_b 1")
     print(f"  compare")
@@ -326,7 +326,7 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
         print(f"  # 条件 {label_id}_{when_idx}: {cond}")
 
         if cond_head == "eq":
-            codegen_expr(fn_arg_names, lvar_names, cond)
+            _codegen_expr_binary(fn_arg_names, lvar_names, cond)
 
             print(f"  set_reg_b 1")
             print(f"  compare")
