@@ -154,29 +154,12 @@ def _codegen_expr_binary(fn_arg_names, lvar_names, expr):
     else:
         raise not_yet_impl("todo", operator)
 
-def _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg):
-    push_arg = None
-
-    if type(fn_arg) == int:
-        push_arg = fn_arg
-    elif type(fn_arg) == str:
-        if fn_arg in fn_arg_names:
-            push_arg = to_fn_arg_addr(fn_arg_names, fn_arg)
-        elif fn_arg in lvar_names:
-            push_arg = to_lvar_addr(lvar_names, fn_arg)
-        else:
-            raise not_yet_impl("fn_arg", fn_arg)
-    else:
-        raise not_yet_impl("fn_arg", fn_arg)
-
-    print(f"  cp {push_arg} reg_a") 
-
 def codegen_call(fn_arg_names, lvar_names, stmt_rest):
     fn_name = stmt_rest[0]
     fn_args = stmt_rest[1:] or []
 
     for fn_arg in reversed(fn_args):
-        _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg)
+        codegen_expr(fn_arg_names, lvar_names, fn_arg)
         print(f"  push reg_a")
 
     codegen_vm_comment(f"call  {fn_name}")
@@ -191,7 +174,7 @@ def codegen_call_set(fn_arg_names, lvar_names, stmt_rest):
     fn_args = fn_temp[1:]
 
     for fn_arg in reversed(fn_args):
-        _codegen_call_push_fn_arg(fn_arg_names, lvar_names, fn_arg)
+        codegen_expr(fn_arg_names, lvar_names, fn_arg)
         print(f"  push reg_a")
 
     codegen_vm_comment(f"call_set  {fn_name}")
