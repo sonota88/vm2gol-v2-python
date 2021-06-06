@@ -197,7 +197,7 @@ class Parser:
     def parse_var(self):
         self.consume("var")
 
-        t = self.tokens[self.pos + 1]
+        t = self.peek(1)
 
         if t.value == ";":
             return self.parse_var_declare()
