@@ -438,7 +438,7 @@ class Parser:
 
     def parse(self):
         try:
-            stmts = self.parse_stmts()
+            stmts = self.parse_top_stmts()
         except Exception as e:
             self.dump_state()
             raise e
