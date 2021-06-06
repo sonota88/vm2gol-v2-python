@@ -62,7 +62,7 @@ def _match_vram_ref(s):
 
 # --------------------------------
 
-def _codegen_exp_push(fn_arg_names, lvar_names, val):
+def _codegen_expr_push(fn_arg_names, lvar_names, val):
     alines = []
     push_arg = None
 
@@ -78,7 +78,7 @@ def _codegen_exp_push(fn_arg_names, lvar_names, val):
     elif type(val) == list:
         alines = concat_alines(
             alines,
-            codegen_exp(fn_arg_names, lvar_names, val)
+            codegen_expr(fn_arg_names, lvar_names, val)
         )
         push_arg = "reg_a"
     else:
@@ -88,7 +88,7 @@ def _codegen_exp_push(fn_arg_names, lvar_names, val):
 
     return alines
 
-def _codegen_exp_add():
+def _codegen_expr_add():
     alines = []
 
     alines.append("  pop reg_b")
@@ -97,7 +97,7 @@ def _codegen_exp_add():
 
     return alines
 
-def _codegen_exp_mult():
+def _codegen_expr_mult():
     alines = []
 
     alines.append("  pop reg_b")
@@ -106,7 +106,7 @@ def _codegen_exp_mult():
 
     return alines
 
-def _codegen_exp_eq():
+def _codegen_expr_eq():
     global g_label_id
 
     alines = []
@@ -133,7 +133,7 @@ def _codegen_exp_eq():
 
     return alines
 
-def _codegen_exp_neq():
+def _codegen_expr_neq():
     global g_label_id
 
     alines = []
@@ -160,34 +160,34 @@ def _codegen_exp_neq():
 
     return alines
 
-def codegen_exp(fn_arg_names, lvar_names, exp):
+def codegen_expr(fn_arg_names, lvar_names, expr):
     global g_label_id
 
     alines = []
-    operator = exp[0]
-    args = exp[1:]
+    operator = expr[0]
+    args = expr[1:]
 
     arg_l = args[0]
     arg_r = args[1]
 
     alines = concat_alines(
         alines,
-        _codegen_exp_push(fn_arg_names, lvar_names, arg_l)
+        _codegen_expr_push(fn_arg_names, lvar_names, arg_l)
     )
 
     alines = concat_alines(
         alines,
-        _codegen_exp_push(fn_arg_names, lvar_names, arg_r)
+        _codegen_expr_push(fn_arg_names, lvar_names, arg_r)
     )
 
     if operator == "+":
-        alines = concat_alines(alines, _codegen_exp_add())
+        alines = concat_alines(alines, _codegen_expr_add())
     elif operator == "*":
-        alines = concat_alines(alines, _codegen_exp_mult())
+        alines = concat_alines(alines, _codegen_expr_mult())
     elif operator == "eq":
-        alines = concat_alines(alines, _codegen_exp_eq())
+        alines = concat_alines(alines, _codegen_expr_eq())
     elif operator == "neq":
-        alines = concat_alines(alines, _codegen_exp_neq())
+        alines = concat_alines(alines, _codegen_expr_neq())
     else:
         raise not_yet_impl("todo", operator)
 
@@ -263,40 +263,40 @@ def codegen_call_set(fn_arg_names, lvar_names, stmt_rest):
 def codegen_set(fn_arg_names, lvar_names, rest):
     alines = []
     dest = rest[0]
-    exp = rest[1]
+    expr = rest[1]
 
     src_val = None
 
-    if type(exp) == int:
-        src_val = exp
-    elif type(exp) == list:
+    if type(expr) == int:
+        src_val = expr
+    elif type(expr) == list:
         alines = concat_alines(
             alines,
-            codegen_exp(fn_arg_names, lvar_names, exp)
+            codegen_expr(fn_arg_names, lvar_names, expr)
         )
         src_val = "reg_a"
-    elif type(exp) == str:
-        if exp in fn_arg_names:
-            src_val = to_fn_arg_addr(fn_arg_names, exp)
-        elif exp in lvar_names:
-            src_val = to_lvar_addr(lvar_names, exp)
-        elif _match_vram_addr(exp):
-            vram_addr = _match_vram_addr(exp)
+    elif type(expr) == str:
+        if expr in fn_arg_names:
+            src_val = to_fn_arg_addr(fn_arg_names, expr)
+        elif expr in lvar_names:
+            src_val = to_lvar_addr(lvar_names, expr)
+        elif _match_vram_addr(expr):
+            vram_addr = _match_vram_addr(expr)
             alines.append(f"  get_vram {vram_addr} reg_a")
             src_val = "reg_a"
-        elif _match_vram_ref(exp):
-            var_name = _match_vram_ref(exp)
+        elif _match_vram_ref(expr):
+            var_name = _match_vram_ref(expr)
             if var_name in lvar_names:
                 lvar_addr = to_lvar_addr(lvar_names, var_name)
                 alines.append(f"  get_vram {lvar_addr} reg_a")
             else:
-                raise not_yet_impl("exp", exp)
+                raise not_yet_impl("expr", expr)
 
             src_val = "reg_a"
         else:
-            raise not_yet_impl("exp", exp)
+            raise not_yet_impl("expr", expr)
     else:
-        raise not_yet_impl("exp", exp)
+        raise not_yet_impl("expr", expr)
 
     if _match_vram_addr(dest):
         vram_addr = _match_vram_addr(dest)
@@ -345,7 +345,7 @@ def codegen_return(_, lvar_names, stmt_rest):
 def codegen_while(fn_arg_names, lvar_names, rest):
     global g_label_id
     alines = []
-    cond_exp = rest[0]
+    cond_expr = rest[0]
     body = rest[1]
 
     g_label_id += 1
@@ -361,7 +361,7 @@ def codegen_while(fn_arg_names, lvar_names, rest):
 
     alines = concat_alines(
         alines,
-        codegen_exp(fn_arg_names, lvar_names, cond_exp)
+        codegen_expr(fn_arg_names, lvar_names, cond_expr)
     )
 
     alines.append(f"  set_reg_b 1")
@@ -407,7 +407,7 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
         if cond_head == "eq":
             alines = concat_alines(
                 alines,
-                codegen_exp(fn_arg_names, lvar_names, cond)
+                codegen_expr(fn_arg_names, lvar_names, cond)
             )
 
             alines.append(f"  set_reg_b 1")
