@@ -423,6 +423,19 @@ class Parser:
 
         return stmts
 
+    def parse_top_stmt(self):
+        if self.peek().value == "func":
+            return self.parse_func()
+        else:
+            raise Exception("unexpected token")
+
+    def parse_top_stmts(self):
+        stmts = []
+        while not self.is_end():
+            stmts.append(self.parse_top_stmt())
+
+        return stmts
+
     def parse(self):
         try:
             stmts = self.parse_stmts()
