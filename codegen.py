@@ -324,7 +324,7 @@ def codegen_return(_, lvar_names, stmt_rest):
     retval = stmt_rest[0]
 
     if type(retval) == int:
-        alines.append(f"  set_reg_a {retval}")
+        alines.append(f"  cp {retval} reg_a")
     elif type(retval) == str:
         if _match_vram_ref(retval):
             var_name = _match_vram_ref(retval)
