@@ -284,8 +284,6 @@ def parse_call_set():
 def parse_return():
     consume("return")
 
-    t = peek()
-
     expr = parse_expr()
     consume(";")
 
