@@ -355,6 +355,18 @@ def codegen_top_stmts(rest):
         else:
             raise not_yet_impl("stmt_head", stmt_head)
 
+def codegen_builtin_set_vram():
+    print(f"")
+    print(f"label set_vram")
+    print(f"  push bp")
+    print(f"  cp sp bp")
+
+    print(f"  set_vram [bp:2] [bp:3]") # vram_addr value
+
+    print(f"  cp bp sp")
+    print(f"  pop bp")
+    print(f"  ret")
+
 def codegen(tree):
     print("  call main")
     print("  exit")
@@ -363,6 +375,10 @@ def codegen(tree):
     rest = tree[1:]
 
     codegen_top_stmts(rest)
+
+    print("#>builtins")
+    codegen_builtin_set_vram()
+    print("#<builtins")
 
 # --------------------------------
 
