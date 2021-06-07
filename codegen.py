@@ -34,7 +34,7 @@ def to_fn_arg_disp(fn_arg_names, fn_arg_name):
 
 def to_lvar_addr(lvar_names, lvar_name):
     i = lvar_names.index(lvar_name)
-    return f"[bp:-{i+1}]"
+    return -(i + 1)
 
 # --------------------------------
 
@@ -102,8 +102,8 @@ def gen_expr(fn_arg_names, lvar_names, expr):
             disp = to_fn_arg_disp(fn_arg_names, expr)
             print(f"  cp [bp:{disp}] reg_a")
         elif expr in lvar_names:
-            cp_src = to_lvar_addr(lvar_names, expr)
-            print(f"  cp {cp_src} reg_a")
+            disp = to_lvar_addr(lvar_names, expr)
+            print(f"  cp [bp:{disp}] reg_a")
         else:
             raise not_yet_impl("expr", expr)
     elif type(expr) == list:
@@ -154,8 +154,8 @@ def gen_call_set(fn_arg_names, lvar_names, stmt_rest):
 
     gen_call(fn_arg_names, lvar_names, funcall)
 
-    lvar_addr = to_lvar_addr(lvar_names, lvar_name)
-    print(f"  cp reg_a {lvar_addr}")
+    disp = to_lvar_addr(lvar_names, lvar_name)
+    print(f"  cp reg_a [bp:{disp}]")
 
 def gen_set(fn_arg_names, lvar_names, rest):
     dest = rest[0]
@@ -165,8 +165,8 @@ def gen_set(fn_arg_names, lvar_names, rest):
     src_val = "reg_a"
 
     if dest in lvar_names:
-        lvar_addr = to_lvar_addr(lvar_names, dest)
-        print(f"  cp {src_val} {lvar_addr}")
+        disp = to_lvar_addr(lvar_names, dest)
+        print(f"  cp {src_val} [bp:{disp}]")
     else:
         raise not_yet_impl("dest", dest)
 
