@@ -81,11 +81,11 @@ def _codegen_expr_eq():
     print(f"  compare")
     print(f"  jump_eq {label_then}")
 
-    print(f"  set_reg_a 0")
+    print(f"  cp 0 reg_a")
     print(f"  jump {label_end}")
 
     print(f"label {label_then}")
-    print(f"  set_reg_a 1")
+    print(f"  cp 1 reg_a")
 
     print(f"label {label_end}")
 
@@ -104,11 +104,11 @@ def _codegen_expr_neq():
     print(f"  compare")
     print(f"  jump_eq {label_then}")
 
-    print(f"  set_reg_a 1")
+    print(f"  cp 1 reg_a")
     print(f"  jump {label_end}")
 
     print(f"label {label_then}")
-    print(f"  set_reg_a 0")
+    print(f"  cp 0 reg_a")
 
     print(f"label {label_end}")
 
