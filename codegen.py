@@ -180,16 +180,7 @@ def codegen_call_set(fn_arg_names, lvar_names, stmt_rest):
     lvar_name = stmt_rest[0]
     fn_temp = stmt_rest[1]
 
-    fn_name = fn_temp[0]
-    fn_args = fn_temp[1:]
-
-    for fn_arg in reversed(fn_args):
-        codegen_expr(fn_arg_names, lvar_names, fn_arg)
-        print(f"  push reg_a")
-
-    codegen_vm_comment(f"call_set  {fn_name}")
-    print(f"  call {fn_name}")
-    print(f"  add_sp {len(fn_args)}")
+    codegen_call(fn_arg_names, lvar_names, fn_temp)
 
     lvar_addr = to_lvar_addr(lvar_names, lvar_name)
     print(f"  cp reg_a {lvar_addr}")
