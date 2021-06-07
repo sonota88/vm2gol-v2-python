@@ -242,15 +242,6 @@ def parse_set():
 
     return ["set", var_name, expr]
 
-def parse_call():
-    consume("call")
-
-    funcall = parse_funcall()
-
-    consume(";")
-
-    return ["call", *funcall]
-
 def parse_funcall():
     global pos
 
@@ -263,6 +254,15 @@ def parse_funcall():
     consume(")")
 
     return [func_name, *args]
+
+def parse_call():
+    consume("call")
+
+    funcall = parse_funcall()
+
+    consume(";")
+
+    return ["call", *funcall]
 
 def parse_call_set():
     global pos
