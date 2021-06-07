@@ -32,6 +32,10 @@ def asm_prologue():
     print("  push bp")
     print("  cp sp bp")
 
+def asm_epilogue():
+    print("  cp bp sp")
+    print("  pop bp")
+
 def to_fn_arg_disp(fn_arg_names, fn_arg_name):
     i = fn_arg_names.index(fn_arg_name)
     return i + 2
@@ -304,8 +308,7 @@ def gen_func_def(rest):
             gen_stmt(fn_arg_names, lvar_names, stmt)
 
     print("")
-    print("  cp bp sp")
-    print("  pop bp")
+    asm_epilogue()
     print("  ret")
 
 def gen_top_stmts(rest):
@@ -327,8 +330,7 @@ def gen_builtin_set_vram():
 
     print(f"  set_vram [bp:2] [bp:3]") # vram_addr value
 
-    print(f"  cp bp sp")
-    print(f"  pop bp")
+    asm_epilogue()
     print(f"  ret")
 
 def gen_builtin_get_vram():
@@ -338,8 +340,7 @@ def gen_builtin_get_vram():
 
     print(f"  get_vram [bp:2] reg_a") # vram_addr dest
 
-    print(f"  cp bp sp")
-    print(f"  pop bp")
+    asm_epilogue()
     print(f"  ret")
 
 def codegen(tree):
