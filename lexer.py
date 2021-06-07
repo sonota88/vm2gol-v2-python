@@ -16,6 +16,21 @@ def to_json(token):
         [token.type, token.value]
     )
 
+def is_kw(value):
+    return value in [
+        "func",
+        "set",
+        "var",
+        "call_set",
+        "call",
+        "return",
+        "case",
+        "while",
+        "when",
+        "_cmt",
+        "_debug"
+    ]
+
 def tokenize(src):
     tokens = []
     pos = 0
@@ -23,7 +38,6 @@ def tokenize(src):
     re_space = r"([ \n]+)"
     re_comment = r"(//.*)\n"
     re_str = r"\"(.*)\""
-    re_kw = r"(func|set|var|call_set|call|return|case|while|when|_cmt|_debug)[^a-z_]"
     re_int = r"(-?[0-9]+)"
     re_sym = r"(==|!=|[(){}=;+*,])"
     re_ident = r"([a-z_][a-z0-9_]*)"
@@ -44,11 +58,6 @@ def tokenize(src):
             s = m.group(1)
             tokens.append( Token("str", s) )
             pos += len(s) + 2
-        elif re.match(re_kw, rest):
-            m = re.match(re_kw, rest)
-            s = m.group(1)
-            tokens.append( Token("kw", s) )
-            pos += len(s)
         elif re.match(re_int, rest):
             m = re.match(re_int, rest)
             s = m.group(1)
@@ -62,7 +71,10 @@ def tokenize(src):
         elif re.match(re_ident, rest):
             m = re.match(re_ident, rest)
             s = m.group(1)
-            tokens.append( Token("ident", s) )
+            if is_kw(s):
+                tokens.append( Token("kw", s) )
+            else:
+                tokens.append( Token("ident", s) )
             pos += len(s)
         else:
             raise not_yet_impl("rest", rest)
