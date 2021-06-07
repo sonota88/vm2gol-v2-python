@@ -240,7 +240,7 @@ def codegen_while(fn_arg_names, lvar_names, rest):
 
     codegen_expr(fn_arg_names, lvar_names, cond_expr)
 
-    print(f"  set_reg_b 1")
+    print(f"  cp 1 reg_b")
     print(f"  compare")
 
     print(f"  jump_eq {label_true}")
@@ -274,7 +274,7 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
 
         codegen_expr(fn_arg_names, lvar_names, cond)
 
-        print(f"  set_reg_b 1")
+        print(f"  cp 1 reg_b")
         print(f"  compare")
         print(f"  jump_eq {label_when_head}_{when_idx}")
         print(f"  jump {label_end_when_head}_{when_idx}")

@@ -23,7 +23,7 @@ label main
 label then_2
   cp 1 reg_a
 label end_eq_2
-  set_reg_b 1
+  cp 1 reg_b
   compare
   jump_eq when_1_0
   jump end_when_1_0
@@ -46,7 +46,7 @@ label end_when_1_0
 label then_3
   cp 1 reg_a
 label end_eq_3
-  set_reg_b 1
+  cp 1 reg_b
   compare
   jump_eq when_1_1
   jump end_when_1_1
