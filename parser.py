@@ -275,11 +275,11 @@ def parse_call_set():
 
     consume("=")
 
-    expr = parse_funcall()
+    funcall = parse_funcall()
 
     consume(";")
 
-    return ["call_set", var_name, expr]
+    return ["call_set", var_name, funcall]
 
 def parse_return():
     consume("return")
