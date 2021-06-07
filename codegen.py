@@ -207,7 +207,7 @@ def codegen_while(fn_arg_names, lvar_names, rest):
     print(f"label {label_end}")
     print("")
 
-def codegen_case(fn_arg_names, lvar_names, when_blocks):
+def codegen_case(fn_arg_names, lvar_names, when_clauses):
     global g_label_id
 
     g_label_id += 1
@@ -219,10 +219,10 @@ def codegen_case(fn_arg_names, lvar_names, when_blocks):
     label_when_head = f"when_{label_id}"
     label_end_when_head = f"end_when_{label_id}"
 
-    for when_block in when_blocks:
+    for when_clause in when_clauses:
         when_idx += 1
-        cond = when_block[0]
-        rest = when_block[1:]
+        cond = when_clause[0]
+        rest = when_clause[1:]
         print(f"  # 条件 {label_id}_{when_idx}: {cond}")
 
         codegen_expr(fn_arg_names, lvar_names, cond)
