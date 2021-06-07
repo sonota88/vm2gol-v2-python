@@ -174,30 +174,27 @@ def parse_var():
     else:
         raise parse_error(t)
 
-def parse_expr_right(expr_l):
+def parse_expr_right():
     t = peek()
-
-    if t.value == ";" or t.value == ")":
-        return expr_l
 
     if t.value == "+":
         consume("+")
         expr_r = parse_expr()
-        return ["+", expr_l, expr_r]
+        return ["+", expr_r]
     elif t.value == "*":
         consume("*")
         expr_r = parse_expr()
-        return ["*", expr_l, expr_r]
+        return ["*", expr_r]
     elif t.value == "==":
         consume("==")
         expr_r = parse_expr()
-        return ["eq", expr_l, expr_r]
+        return ["eq", expr_r]
     elif t.value == "!=":
         consume("!=")
         expr_r = parse_expr()
-        return ["neq", expr_l, expr_r]
+        return ["neq", expr_r]
     else:
-        raise parse_error(t)
+        return []
 
 
 def parse_expr():
@@ -209,7 +206,11 @@ def parse_expr():
         consume("(")
         expr_l = parse_expr()
         consume(")")
-        return parse_expr_right(expr_l)
+        tail = parse_expr_right()
+        if len(tail) == 0:
+            return expr_l
+
+        return [tail[0], expr_l, tail[1]]
 
     if t_left.type == "int" or t_left.type == "ident":
         pos += 1
@@ -221,7 +222,11 @@ def parse_expr():
         else:
             raise Exception("invalid type")
 
-        return parse_expr_right(expr_l)
+        tail = parse_expr_right()
+        if len(tail) == 0:
+            return expr_l
+
+        return [tail[0], expr_l, tail[1]]
     else:
         raise parse_error()
 
