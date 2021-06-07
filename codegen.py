@@ -253,6 +253,9 @@ def gen_case(fn_arg_names, lvar_names, when_clauses):
 def gen_vm_comment(comment):
     print("  _cmt " + comment.replace(" ", "~"))
 
+def gen_debug(comment):
+    print("  _debug")
+
 def gen_stmt(fn_arg_names, lvar_names, stmt):
     stmt_head = stmt[0]
     stmt_rest = stmt[1:]
@@ -271,6 +274,8 @@ def gen_stmt(fn_arg_names, lvar_names, stmt):
         gen_while(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "_cmt":
         gen_vm_comment(stmt_rest[0])
+    elif stmt_head == "_debug":
+        gen_debug()
     else:
         raise not_yet_impl("stmt_head", stmt_head)
 

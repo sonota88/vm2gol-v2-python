@@ -23,7 +23,7 @@ def tokenize(src):
     re_space = r"([ \n]+)"
     re_comment = r"(//.*)\n"
     re_str = r"\"(.*)\""
-    re_kw = r"(func|set|var|call_set|call|return|case|while|when|_cmt)[^a-z_]"
+    re_kw = r"(func|set|var|call_set|call|return|case|while|when|_cmt|_debug)[^a-z_]"
     re_int = r"(-?[0-9]+)"
     re_sym = r"(==|!=|[(){}=;+*,])"
     re_ident = r"([a-z_][a-z0-9_]*)"

@@ -351,6 +351,14 @@ def parse_vm_comment():
 
     return ["_cmt", comment]
 
+def parse_debug():
+    consume("_debug")
+    consume("(")
+    consume(")")
+    consume(";")
+
+    return ["_debug"]
+
 def parse_stmt():
     t = peek()
 
@@ -370,6 +378,8 @@ def parse_stmt():
         return parse_case()
     elif t.value == "_cmt":
         return parse_vm_comment()
+    elif t.value == "_debug":
+        return parse_debug()
     else:
         raise Exception("parse error")
 
