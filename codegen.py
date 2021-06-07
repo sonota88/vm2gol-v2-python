@@ -367,6 +367,18 @@ def codegen_builtin_set_vram():
     print(f"  pop bp")
     print(f"  ret")
 
+def codegen_builtin_get_vram():
+    print(f"")
+    print(f"label get_vram")
+    print(f"  push bp")
+    print(f"  cp sp bp")
+
+    print(f"  get_vram [bp:2] reg_a") # vram_addr dest
+
+    print(f"  cp bp sp")
+    print(f"  pop bp")
+    print(f"  ret")
+
 def codegen(tree):
     print("  call main")
     print("  exit")
@@ -378,6 +390,7 @@ def codegen(tree):
 
     print("#>builtins")
     codegen_builtin_set_vram()
+    codegen_builtin_get_vram()
     print("#<builtins")
 
 # --------------------------------
