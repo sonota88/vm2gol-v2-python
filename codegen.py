@@ -28,6 +28,10 @@ def not_yet_impl(k, v):
 
 g_label_id = 0
 
+def asm_prologue():
+    print("  push bp")
+    print("  cp sp bp")
+
 def to_fn_arg_disp(fn_arg_names, fn_arg_name):
     i = fn_arg_names.index(fn_arg_name)
     return i + 2
@@ -282,8 +286,7 @@ def gen_func_def(rest):
 
     print("")
     print(f"label {fn_name}")
-    print("  push bp")
-    print("  cp sp bp")
+    asm_prologue()
 
     print("")
     print("  # 関数の処理本体")
@@ -320,8 +323,7 @@ def gen_top_stmts(rest):
 def gen_builtin_set_vram():
     print(f"")
     print(f"label set_vram")
-    print(f"  push bp")
-    print(f"  cp sp bp")
+    asm_prologue()
 
     print(f"  set_vram [bp:2] [bp:3]") # vram_addr value
 
@@ -332,8 +334,7 @@ def gen_builtin_set_vram():
 def gen_builtin_get_vram():
     print(f"")
     print(f"label get_vram")
-    print(f"  push bp")
-    print(f"  cp sp bp")
+    asm_prologue()
 
     print(f"  get_vram [bp:2] reg_a") # vram_addr dest
 
