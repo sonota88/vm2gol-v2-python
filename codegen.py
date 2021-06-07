@@ -28,9 +28,9 @@ def not_yet_impl(k, v):
 
 g_label_id = 0
 
-def to_fn_arg_addr(fn_arg_names, fn_arg_name):
+def to_fn_arg_disp(fn_arg_names, fn_arg_name):
     i = fn_arg_names.index(fn_arg_name)
-    return f"[bp:{i+2}]"
+    return i + 2
 
 def to_lvar_addr(lvar_names, lvar_name):
     i = lvar_names.index(lvar_name)
@@ -99,8 +99,8 @@ def gen_expr(fn_arg_names, lvar_names, expr):
         print(f"  cp {expr} reg_a")
     elif type(expr) == str:
         if expr in fn_arg_names:
-            cp_src = to_fn_arg_addr(fn_arg_names, expr)
-            print(f"  cp {cp_src} reg_a")
+            disp = to_fn_arg_disp(fn_arg_names, expr)
+            print(f"  cp [bp:{disp}] reg_a")
         elif expr in lvar_names:
             cp_src = to_lvar_addr(lvar_names, expr)
             print(f"  cp {cp_src} reg_a")
