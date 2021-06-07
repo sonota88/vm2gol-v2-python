@@ -202,16 +202,6 @@ def parse_expr():
 
     t_left = peek()
 
-    if t_left.value == "(":
-        consume("(")
-        expr_l = parse_expr()
-        consume(")")
-        tail = parse_expr_right()
-        if len(tail) == 0:
-            return expr_l
-
-        return [tail[0], expr_l, tail[1]]
-
     if t_left.type == "int" or t_left.type == "ident":
         pos += 1
 
@@ -227,6 +217,16 @@ def parse_expr():
             return expr_l
 
         return [tail[0], expr_l, tail[1]]
+    elif t_left.type == "sym":
+        consume("(")
+        expr_l = parse_expr()
+        consume(")")
+        tail = parse_expr_right()
+        if len(tail) == 0:
+            return expr_l
+
+        return [tail[0], expr_l, tail[1]]
+
     else:
         raise parse_error()
 
