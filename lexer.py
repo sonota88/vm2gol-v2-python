@@ -26,7 +26,7 @@ def tokenize(src):
     re_kw = r"(func|set|var|call_set|call|return|case|while|when|_cmt)[^a-z_]"
     re_int = r"(-?[0-9]+)"
     re_sym = r"(==|!=|[(){}=;+*,])"
-    re_ident = r"([a-z_][a-z0-9_\[\]]*)"
+    re_ident = r"([a-z_][a-z0-9_]*)"
 
     while pos < len(src):
         rest = src[pos:]
