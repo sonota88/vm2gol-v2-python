@@ -211,24 +211,19 @@ def parse_expr():
             expr_l = t_left.value
         else:
             raise Exception("invalid type")
-
-        tail = parse_expr_right()
-        if len(tail) == 0:
-            return expr_l
-
-        return [tail[0], expr_l, tail[1]]
     elif t_left.type == "sym":
         consume("(")
         expr_l = parse_expr()
         consume(")")
-        tail = parse_expr_right()
-        if len(tail) == 0:
-            return expr_l
-
-        return [tail[0], expr_l, tail[1]]
-
     else:
         raise parse_error()
+
+    tail = parse_expr_right()
+    if len(tail) == 0:
+        return expr_l
+
+    return [tail[0], expr_l, tail[1]]
+
 
 def parse_set():
     global pos
