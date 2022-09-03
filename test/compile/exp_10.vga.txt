@@ -12,15 +12,16 @@ label main
   push reg_a
   cp 3 reg_a
   push reg_a
+  pop reg_b
+  pop reg_a
+  add_ab
+
+  push reg_a
   cp 4 reg_a
   push reg_a
   pop reg_b
   pop reg_a
   mult_ab
-  push reg_a
-  pop reg_b
-  pop reg_a
-  add_ab
 
   cp bp sp
   pop bp

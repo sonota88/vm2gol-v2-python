@@ -196,6 +196,9 @@ def _parse_expr_factor():
     else:
         raise parse_error()
 
+def is_binop(t):
+    return t.value in ["+", "*", "==", "!="]
+
 def parse_expr_right():
     t = peek()
 
@@ -219,13 +222,22 @@ def parse_expr_right():
         return []
 
 def parse_expr():
-    expr_l = _parse_expr_factor()
+    global pos
 
-    tail = parse_expr_right()
-    if len(tail) == 0:
-        return expr_l
+    expr = _parse_expr_factor()
 
-    return [tail[0], expr_l, tail[1]]
+    while(is_binop(peek())):
+        op = peek().value
+        if op == "==":
+            op = "eq"
+        elif op == "!=":
+            op = "neq"
+        pos += 1
+
+        expr_r = _parse_expr_factor()
+        expr = [op, expr, expr_r]
+
+    return expr
 
 
 def parse_set():
