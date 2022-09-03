@@ -55,7 +55,7 @@ ns=
 if [ $# -eq 1 ]; then
   ns="$1"
 else
-  ns="$(seq 1 10)"
+  ns="$(seq 1 11)"
 fi
 
 for n in $ns; do
