@@ -24,14 +24,14 @@ test_nn() {
 
   local exp_file="${TEST_DIR}/compile/exp_${nn}.vga.txt"
 
-  python lexer.py ${TEST_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
-  python parser.py $TEMP_TOKENS_FILE > $TEMP_VGT_FILE
+  python mrcl_lexer.py ${TEST_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
+  python mrcl_parser.py $TEMP_TOKENS_FILE > $TEMP_VGT_FILE
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_parse"
     return
   fi
 
-  python codegen.py $TEMP_VGT_FILE | tr "'" '"'> $TEMP_VGA_FILE
+  python mrcl_codegen.py $TEMP_VGT_FILE | tr "'" '"'> $TEMP_VGA_FILE
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_codegen"
     return
