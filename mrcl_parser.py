@@ -174,6 +174,28 @@ def parse_var():
     else:
         raise parse_error(t)
 
+def _parse_expr_factor():
+    global pos
+
+    t = peek()
+
+    if t.type == "int" or t.type == "ident":
+        pos += 1
+
+        if t.type == "int":
+            return int(t.value)
+        elif t.type == "ident":
+            return t.value
+        else:
+            raise Exception("invalid type")
+    elif t.type == "sym":
+        consume("(")
+        expr = parse_expr()
+        consume(")")
+        return expr
+    else:
+        raise parse_error()
+
 def parse_expr_right():
     t = peek()
 
@@ -196,27 +218,8 @@ def parse_expr_right():
     else:
         return []
 
-
 def parse_expr():
-    global pos
-
-    t_left = peek()
-
-    if t_left.type == "int" or t_left.type == "ident":
-        pos += 1
-
-        if t_left.type == "int":
-            expr_l = int(t_left.value)
-        elif t_left.type == "ident":
-            expr_l = t_left.value
-        else:
-            raise Exception("invalid type")
-    elif t_left.type == "sym":
-        consume("(")
-        expr_l = parse_expr()
-        consume(")")
-    else:
-        raise parse_error()
+    expr_l = _parse_expr_factor()
 
     tail = parse_expr_right()
     if len(tail) == 0:
