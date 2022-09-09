@@ -199,28 +199,6 @@ def _parse_expr_factor():
 def is_binop(t):
     return t.value in ["+", "*", "==", "!="]
 
-def parse_expr_right():
-    t = peek()
-
-    if t.value == "+":
-        consume("+")
-        expr_r = parse_expr()
-        return ["+", expr_r]
-    elif t.value == "*":
-        consume("*")
-        expr_r = parse_expr()
-        return ["*", expr_r]
-    elif t.value == "==":
-        consume("==")
-        expr_r = parse_expr()
-        return ["eq", expr_r]
-    elif t.value == "!=":
-        consume("!=")
-        expr_r = parse_expr()
-        return ["neq", expr_r]
-    else:
-        return []
-
 def parse_expr():
     global pos
 
