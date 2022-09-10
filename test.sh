@@ -17,6 +17,28 @@ export TEMP_VGA_FILE="${TEMP_DIR}/test.vga.txt"
 
 ERRS=""
 
+RUNNER_CMD=python
+
+run_lex() {
+  local infile="$1"; shift
+
+  $RUNNER_CMD mrcl_lexer.py $infile
+}
+
+run_parse() {
+  local infile="$1"; shift
+
+  $RUNNER_CMD mrcl_parser.py $infile
+}
+
+run_codegen() {
+  local infile="$1"; shift
+
+  $RUNNER_CMD mrcl_codegen.py $infile
+}
+
+# --------------------------------
+
 test_nn() {
   local nn="$1"; shift
 
@@ -24,14 +46,14 @@ test_nn() {
 
   local exp_file="${TEST_DIR}/compile/exp_${nn}.vga.txt"
 
-  python mrcl_lexer.py ${TEST_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
-  python mrcl_parser.py $TEMP_TOKENS_FILE > $TEMP_VGT_FILE
+  run_lex ${TEST_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
+  run_parse $TEMP_TOKENS_FILE > $TEMP_VGT_FILE
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_parse"
     return
   fi
 
-  python mrcl_codegen.py $TEMP_VGT_FILE | tr "'" '"'> $TEMP_VGA_FILE
+  run_codegen $TEMP_VGT_FILE | tr "'" '"'> $TEMP_VGA_FILE
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_codegen"
     return
