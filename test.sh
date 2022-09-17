@@ -76,23 +76,29 @@ test_nn() {
 
 # --------------------------------
 
-setup
+main() {
+  setup
 
-ns=
+  ns=
 
-if [ $# -eq 1 ]; then
-  ns="$1"
-else
-  ns="$(seq 1 11)"
-fi
+  if [ $# -eq 1 ]; then
+    ns="$1"
+  else
+    ns="$(seq 1 11)"
+  fi
 
-for n in $ns; do
-  test_nn $(printf "%02d" $n)
-done
+  for n in $ns; do
+    test_nn $(printf "%02d" $n)
+  done
 
-if [ "$ERRS" = "" ]; then
-  echo "ok"
-else
-  echo "----"
-  echo "FAILED: ${ERRS}"
-fi
+  if [ "$ERRS" = "" ]; then
+    echo "ok"
+  else
+    echo "----"
+    echo "FAILED: ${ERRS}"
+  fi
+}
+
+# --------------------------------
+
+main "$@"
