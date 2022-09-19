@@ -74,11 +74,7 @@ test_nn() {
   fi
 }
 
-# --------------------------------
-
-main() {
-  setup
-
+test_compile() {
   ns=
 
   if [ $# -eq 1 ]; then
@@ -97,6 +93,14 @@ main() {
     echo "----"
     echo "FAILED: ${ERRS}"
   fi
+}
+
+# --------------------------------
+
+main() {
+  setup
+
+  test_compile "$@"
 }
 
 # --------------------------------
