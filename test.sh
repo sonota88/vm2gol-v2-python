@@ -45,7 +45,7 @@ setup() {
 
 # --------------------------------
 
-test_nn() {
+test_compile_nn() {
   local nn="$1"; shift
 
   echo "test_${nn}"
@@ -84,7 +84,7 @@ test_compile() {
   fi
 
   for n in $ns; do
-    test_nn $(printf "%02d" $n)
+    test_compile_nn $(printf "%02d" $n)
   done
 
   if [ "$ERRS" = "" ]; then
