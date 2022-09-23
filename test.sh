@@ -100,7 +100,16 @@ test_compile() {
 main() {
   setup
 
-  test_compile "$@"
+  local cmd="$1"; shift
+  case $cmd in
+    compile | c* )  #task: Run compile tests
+      test_compile "$@"
+
+  ;; * )
+      echo "Tasks:"
+      grep '#task: ' $0 | grep -v grep
+      ;;
+  esac
 }
 
 # --------------------------------
