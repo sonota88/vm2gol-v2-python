@@ -43,6 +43,18 @@ setup() {
   mkdir -p ./z_tmp
 }
 
+postproc() {
+  local stage="$1"; shift
+
+  if [ "$ERRS" = "" ]; then
+    echo "${stage}: ok"
+  else
+    echo "----"
+    echo "FAILED: ${ERRS}" | sed -e 's/,/\n  /g'
+    exit 1
+  fi
+}
+
 # --------------------------------
 
 test_compile_nn() {
@@ -104,6 +116,7 @@ main() {
   case $cmd in
     compile | c* )  #task: Run compile tests
       test_compile "$@"
+      postproc "compile"
 
   ;; * )
       echo "Tasks:"
