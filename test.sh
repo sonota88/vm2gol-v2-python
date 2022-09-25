@@ -109,6 +109,12 @@ test_compile() {
 
 # --------------------------------
 
+test_all() {
+  test_compile "$@"
+}
+
+# --------------------------------
+
 main() {
   setup
 
@@ -117,6 +123,10 @@ main() {
     compile | c* )  #task: Run compile tests
       test_compile "$@"
       postproc "compile"
+
+  ;; all | a* )     #task: Run all tests
+      test_all "$@"
+      postproc "all"
 
   ;; * )
       echo "Tasks:"
