@@ -8,16 +8,16 @@ print_project_dir() {
   )
 }
 
-export PROJECT_DIR="$(print_project_dir)"
-export TEST_DIR="${PROJECT_DIR}/test"
-export TEMP_DIR="${PROJECT_DIR}/z_tmp"
-export TEMP_TOKENS_FILE="${TEMP_DIR}/test.tokens.txt"
-export TEMP_VGT_FILE="${TEMP_DIR}/test.vgt.json"
-export TEMP_VGA_FILE="${TEMP_DIR}/test.vga.txt"
+readonly PROJECT_DIR="$(print_project_dir)"
+readonly TEST_DIR="${PROJECT_DIR}/test"
+readonly TEMP_DIR="${PROJECT_DIR}/z_tmp"
+readonly TEMP_TOKENS_FILE="${TEMP_DIR}/test.tokens.txt"
+readonly TEMP_VGT_FILE="${TEMP_DIR}/test.vgt.json"
+readonly TEMP_VGA_FILE="${TEMP_DIR}/test.vga.txt"
 
 ERRS=""
 
-RUNNER_CMD=python
+readonly RUNNER_CMD=python
 
 run_lex() {
   local infile="$1"; shift
