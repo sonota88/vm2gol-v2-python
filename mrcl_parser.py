@@ -300,7 +300,6 @@ def _parse_when_clause():
     if t.value == "}":
         return None
 
-    consume("when")
     consume("(")
     expr = parse_expr()
     consume(")")
