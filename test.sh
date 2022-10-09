@@ -9,7 +9,7 @@ print_project_dir() {
 }
 
 readonly PROJECT_DIR="$(print_project_dir)"
-readonly TEST_DIR="${PROJECT_DIR}/test"
+readonly TEST_DIR="${PROJECT_DIR}/test_common"
 readonly TEMP_DIR="${PROJECT_DIR}/z_tmp"
 readonly TEMP_TOKENS_FILE="${TEMP_DIR}/test.tokens.txt"
 readonly TEMP_VGT_FILE="${TEMP_DIR}/test.vgt.json"
@@ -92,7 +92,7 @@ test_compile() {
   if [ $# -eq 1 ]; then
     ns="$1"
   else
-    ns="$(seq 1 11)"
+    ns="$(seq 1 27)"
   fi
 
   for n in $ns; do
