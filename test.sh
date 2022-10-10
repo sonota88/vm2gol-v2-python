@@ -110,7 +110,12 @@ test_compile() {
 # --------------------------------
 
 test_all() {
-  test_compile "$@"
+  echo "==== compile ===="
+  test_compile
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},compile"
+    return
+  fi
 }
 
 # --------------------------------
