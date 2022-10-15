@@ -10,6 +10,7 @@ print_project_dir() {
 
 readonly PROJECT_DIR="$(print_project_dir)"
 readonly TEST_DIR="${PROJECT_DIR}/test_common"
+readonly TEST_COMMON_DIR="${PROJECT_DIR}/test_common"
 readonly TEMP_DIR="${PROJECT_DIR}/z_tmp"
 readonly TEMP_TOKENS_FILE="${TEMP_DIR}/test.tokens.txt"
 readonly TEMP_VGT_FILE="${TEMP_DIR}/test.vgt.json"
@@ -62,9 +63,9 @@ test_compile_nn() {
 
   echo "test_${nn}"
 
-  local exp_file="${TEST_DIR}/compile/exp_${nn}.vga.txt"
+  local exp_file="${TEST_COMMON_DIR}/compile/exp_${nn}.vga.txt"
 
-  run_lex ${TEST_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
+  run_lex ${TEST_COMMON_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
   run_parse $TEMP_TOKENS_FILE > $TEMP_VGT_FILE
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},${nn}_parse"
