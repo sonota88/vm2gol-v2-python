@@ -16,6 +16,8 @@ readonly TEMP_TOKENS_FILE="${TEMP_DIR}/test.tokens.txt"
 readonly TEMP_VGT_FILE="${TEMP_DIR}/test.vgt.json"
 readonly TEMP_VGA_FILE="${TEMP_DIR}/test.vga.txt"
 
+readonly MAX_ID_PARSE=2
+
 ERRS=""
 
 readonly RUNNER_CMD=python
@@ -64,6 +66,50 @@ get_ids() {
   else
     seq 1 $max_id
   fi
+}
+
+# --------------------------------
+
+test_parse_nn() {
+  local nn="$1"; shift
+
+  echo "case ${nn}"
+
+  local input_file="${TEST_COMMON_DIR}/parse/${nn}.vg.txt"
+  local temp_tokens_file="${TEMP_DIR}/test.tokens.txt"
+  local temp_vgt_file="${TEMP_DIR}/test.vgt.json"
+  local exp_file="${TEST_COMMON_DIR}/parse/exp_${nn}.vgt.json"
+
+  echo "  lex" >&2
+  run_lex $input_file > $temp_tokens_file
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},parse_${nn}_lex"
+    return
+  fi
+
+  echo "  parse" >&2
+  run_parse $temp_tokens_file \
+    > $temp_vgt_file
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},parse_${nn}_parse"
+    return
+  fi
+
+  ruby test_common/diff.rb json $exp_file $temp_vgt_file
+  if [ $? -ne 0 ]; then
+    # meld $exp_file $temp_vga_file &
+
+    ERRS="${ERRS},parse_${nn}_diff"
+    return
+  fi
+}
+
+test_parse() {
+  local ids="$(get_ids $MAX_ID_PARSE "$@")"
+
+  for id in $ids; do
+    test_parse_nn $(printf "%02d" $id)
+  done
 }
 
 # --------------------------------
@@ -121,6 +167,13 @@ test_compile() {
 # --------------------------------
 
 test_all() {
+  # echo "==== parse ===="
+  # test_parse
+  # if [ $? -ne 0 ]; then
+  #   ERRS="${ERRS},parse"
+  #   return
+  # fi
+
   echo "==== compile ===="
   test_compile
   if [ $? -ne 0 ]; then
@@ -136,6 +189,10 @@ main() {
 
   local cmd="$1"; shift
   case $cmd in
+    # parse | p* )  #task: Run parse tests
+    #   test_parse "$@"
+    #   postproc "parse"
+
     compile | c* )  #task: Run compile tests
       test_compile "$@"
       postproc "compile"
