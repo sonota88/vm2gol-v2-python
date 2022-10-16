@@ -56,6 +56,16 @@ postproc() {
   fi
 }
 
+get_ids() {
+  local max_id="$1"; shift
+
+  if [ $# -eq 1 ]; then
+    echo "$1"
+  else
+    seq 1 $max_id
+  fi
+}
+
 # --------------------------------
 
 test_compile_nn() {
