@@ -32,7 +32,7 @@ def read_tokens(path):
     with open(path) as f:
         for line in f:
             parts = parse_json(line)
-            tokens.append(Token(parts[0], parts[1]))
+            tokens.append(Token(parts[1], parts[2], parts[0]))
 
     return tokens
 
