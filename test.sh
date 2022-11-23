@@ -16,6 +16,7 @@ readonly TEMP_TOKENS_FILE="${TEMP_DIR}/test.tokens.txt"
 readonly TEMP_VGT_FILE="${TEMP_DIR}/test.vgt.json"
 readonly TEMP_VGA_FILE="${TEMP_DIR}/test.vga.txt"
 
+readonly MAX_ID_LEX=3
 readonly MAX_ID_PARSE=2
 
 ERRS=""
@@ -66,6 +67,40 @@ get_ids() {
   else
     seq 1 $max_id
   fi
+}
+
+# --------------------------------
+
+test_lex_nn() {
+  local nn="$1"; shift
+
+  echo "case ${nn}"
+
+  local input_file="${TEST_COMMON_DIR}/lex/${nn}.vg.txt"
+  local temp_tokens_file="${TEMP_DIR}/test.tokens.txt"
+  local exp_file="${TEST_COMMON_DIR}/lex/exp_${nn}.txt"
+
+  run_lex $input_file > $temp_tokens_file
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},lex_${nn}_lex"
+    return
+  fi
+
+  ruby test_common/diff.rb text $exp_file $temp_tokens_file
+  if [ $? -ne 0 ]; then
+    # meld $exp_file $temp_tokens_file &
+
+    ERRS="${ERRS},lex_${nn}_diff"
+    return
+  fi
+}
+
+test_lex() {
+  local ids="$(get_ids $MAX_ID_LEX "$@")"
+
+  for id in $ids; do
+    test_lex_nn $(printf "%02d" $id)
+  done
 }
 
 # --------------------------------
@@ -167,6 +202,13 @@ test_compile() {
 # --------------------------------
 
 test_all() {
+  echo "==== lex ===="
+  test_lex
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},all_lex"
+    return
+  fi
+
   # echo "==== parse ===="
   # test_parse
   # if [ $? -ne 0 ]; then
@@ -189,11 +231,15 @@ main() {
 
   local cmd="$1"; shift
   case $cmd in
+    lex | l* )      #task: Run lex tests
+      test_lex "$@"
+      postproc "lex"
+
     # parse | p* )  #task: Run parse tests
     #   test_parse "$@"
     #   postproc "parse"
 
-    compile | c* )  #task: Run compile tests
+  ;; compile | c* )  #task: Run compile tests
       test_compile "$@"
       postproc "compile"
 
