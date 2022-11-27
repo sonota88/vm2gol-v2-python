@@ -23,6 +23,12 @@ ERRS=""
 
 readonly RUNNER_CMD=python
 
+run_test_json() {
+  local infile="$1"; shift
+
+  $RUNNER_CMD test/test_json.py $infile
+}
+
 run_lex() {
   local infile="$1"; shift
 
@@ -67,6 +73,43 @@ get_ids() {
   else
     seq 1 $max_id
   fi
+}
+
+# --------------------------------
+
+test_json_nn() {
+  local nn="$1"; shift
+
+  echo "case ${nn}"
+
+  local input_file="${TEST_COMMON_DIR}/json/${nn}.json"
+  local temp_json_file="${TEMP_DIR}/test.json"
+  local exp_file="${TEST_COMMON_DIR}/json/${nn}.json"
+
+  run_test_json $input_file > $temp_json_file
+  if [ $? -ne 0 ]; then
+    echo >&2
+    echo "json >>$(cat -A $temp_json_file)<<" >&2
+    ERRS="${ERRS},${nn}_json"
+    return
+  fi
+
+  ruby ${TEST_COMMON_DIR}/diff.rb json-fmt $exp_file $temp_json_file
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},json_${nn}_diff"
+    return
+  fi
+}
+
+test_json() {
+  # TODO json-fmt が利用可能になったら有効化する
+  return
+
+  local ids="$(get_ids $MAX_ID_JSON "$@")"
+
+  for id in $ids; do
+    test_json_nn $(printf "%02d" $id)
+  done
 }
 
 # --------------------------------
@@ -202,6 +245,13 @@ test_compile() {
 # --------------------------------
 
 test_all() {
+  echo "==== json ===="
+  test_json
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},all_json"
+    return
+  fi
+
   echo "==== lex ===="
   test_lex
   if [ $? -ne 0 ]; then
@@ -231,7 +281,11 @@ main() {
 
   local cmd="$1"; shift
   case $cmd in
-    lex | l* )      #task: Run lex tests
+    json | j* )     #task: Run json tests
+      test_json "$@"
+      postproc "json"
+
+  ;; lex | l* )      #task: Run lex tests
       test_lex "$@"
       postproc "lex"
 
