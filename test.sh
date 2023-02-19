@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o nounset
+
 print_project_dir() {
   local real_path="$(readlink --canonicalize "$0")"
   (
