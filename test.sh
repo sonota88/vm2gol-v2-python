@@ -18,6 +18,7 @@ readonly TEMP_VGA_FILE="${TEMP_DIR}/test.vga.txt"
 
 readonly MAX_ID_LEX=3
 readonly MAX_ID_PARSE=2
+readonly MAX_ID_COMPILE=27
 
 ERRS=""
 
@@ -227,13 +228,7 @@ test_compile_nn() {
 }
 
 test_compile() {
-  local ids=
-
-  if [ $# -eq 1 ]; then
-    ids="$1"
-  else
-    ids="$(seq 1 27)"
-  fi
+  local ids="$(get_ids $MAX_ID_COMPILE "$@")"
 
   for id in $ids; do
     test_compile_nn $(printf "%02d" $id)
