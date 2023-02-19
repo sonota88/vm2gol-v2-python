@@ -227,7 +227,7 @@ test_compile_nn() {
 }
 
 test_compile() {
-  ids=
+  local ids=
 
   if [ $# -eq 1 ]; then
     ids="$1"
