@@ -200,15 +200,20 @@ test_compile_nn() {
   local exp_file="${TEST_COMMON_DIR}/compile/exp_${nn}.vga.txt"
 
   run_lex ${TEST_COMMON_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},compile_${nn}_lex"
+    return
+  fi
+
   run_parse $TEMP_TOKENS_FILE > $TEMP_VGT_FILE
   if [ $? -ne 0 ]; then
-    ERRS="${ERRS},${nn}_parse"
+    ERRS="${ERRS},compile_${nn}_parse"
     return
   fi
 
   run_codegen $TEMP_VGT_FILE | tr "'" '"'> $TEMP_VGA_FILE
   if [ $? -ne 0 ]; then
-    ERRS="${ERRS},${nn}_codegen"
+    ERRS="${ERRS},compile_${nn}_codegen"
     return
   fi
 
