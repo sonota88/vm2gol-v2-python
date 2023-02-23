@@ -223,7 +223,7 @@ test_compile_nn() {
   if [ $? -ne 0 ]; then
     # meld $exp_file $TEMP_VGA_FILE &
 
-    ERRS="${ERRS},${nn}_diff"
+    ERRS="${ERRS},compile_${nn}_diff"
     return
   fi
 }
