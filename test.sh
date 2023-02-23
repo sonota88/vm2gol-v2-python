@@ -224,13 +224,13 @@ test_compile_nn() {
   fi
 
   if [ "$local_errs" = "" ]; then
-  ruby test_common/diff.rb asm $exp_file $TEMP_VGA_FILE
-  if [ $? -ne 0 ]; then
-    # meld $exp_file $TEMP_VGA_FILE &
+    ruby test_common/diff.rb asm $exp_file $TEMP_VGA_FILE
+    if [ $? -ne 0 ]; then
+      # meld $exp_file $TEMP_VGA_FILE &
 
-    ERRS="${ERRS},compile_${nn}_diff"
-    return
-  fi
+      ERRS="${ERRS},compile_${nn}_diff"
+      return
+    fi
   fi
 }
 
