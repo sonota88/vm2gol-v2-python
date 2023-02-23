@@ -3,9 +3,8 @@
 set -o nounset
 
 print_project_dir() {
-  local real_path="$(readlink --canonicalize "$0")"
   (
-    cd "$(dirname "$real_path")"
+    cd "$(dirname "$0")"
     pwd
   )
 }
