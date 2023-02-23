@@ -199,32 +199,38 @@ test_compile_nn() {
 
   echo "test_${nn}"
 
+  local local_errs=""
   local exp_file="${TEST_COMMON_DIR}/compile/exp_${nn}.vga.txt"
 
   run_lex ${TEST_COMMON_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},compile_${nn}_lex"
+    local_errs="${local_errs},${nn}_lex"
     return
   fi
 
   run_parse $TEMP_TOKENS_FILE > $TEMP_VGT_FILE
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},compile_${nn}_parse"
+    local_errs="${local_errs},${nn}_parse"
     return
   fi
 
   run_codegen $TEMP_VGT_FILE | tr "'" '"'> $TEMP_VGA_FILE
   if [ $? -ne 0 ]; then
+    local_errs="${local_errs},${nn}_codegen"
     ERRS="${ERRS},compile_${nn}_codegen"
     return
   fi
 
+  if [ "$local_errs" = "" ]; then
   ruby test_common/diff.rb asm $exp_file $TEMP_VGA_FILE
   if [ $? -ne 0 ]; then
     # meld $exp_file $TEMP_VGA_FILE &
 
     ERRS="${ERRS},compile_${nn}_diff"
     return
+  fi
   fi
 }
 
