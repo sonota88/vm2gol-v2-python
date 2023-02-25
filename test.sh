@@ -206,16 +206,16 @@ test_compile_nn() {
   echo "  lex" >&2
   run_lex ${TEST_COMMON_DIR}/compile/${nn}.vg.txt > $temp_tokens_file
   if [ $? -ne 0 ]; then
-    ERRS="${ERRS},compile_${nn}_lex"
     local_errs="${local_errs},${nn}_lex"
+    ERRS="${ERRS},compile_${nn}_lex"
     return
   fi
 
   echo "  parse" >&2
   run_parse $temp_tokens_file > $temp_vgt_file
   if [ $? -ne 0 ]; then
-    ERRS="${ERRS},compile_${nn}_parse"
     local_errs="${local_errs},${nn}_parse"
+    ERRS="${ERRS},compile_${nn}_parse"
     return
   fi
 
