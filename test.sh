@@ -13,9 +13,6 @@ readonly PROJECT_DIR="$(print_project_dir)"
 readonly TEST_DIR="${PROJECT_DIR}/test_common"
 readonly TEST_COMMON_DIR="${PROJECT_DIR}/test_common"
 readonly TEMP_DIR="${PROJECT_DIR}/z_tmp"
-readonly TEMP_TOKENS_FILE="${TEMP_DIR}/test.tokens.txt"
-readonly TEMP_VGT_FILE="${TEMP_DIR}/test.vgt.json"
-readonly TEMP_VGA_FILE="${TEMP_DIR}/test.vga.txt"
 
 readonly MAX_ID_LEX=3
 readonly MAX_ID_PARSE=2
@@ -199,24 +196,27 @@ test_compile_nn() {
 
   echo "test_${nn}"
 
+  local temp_tokens_file="${TEMP_DIR}/test.tokens.txt"
+  local temp_vgt_file="${TEMP_DIR}/test.vgt.json"
+  local temp_vga_file="${TEMP_DIR}/test.vga.txt"
   local local_errs=""
   local exp_file="${TEST_COMMON_DIR}/compile/exp_${nn}.vga.txt"
 
-  run_lex ${TEST_COMMON_DIR}/compile/${nn}.vg.txt > $TEMP_TOKENS_FILE
+  run_lex ${TEST_COMMON_DIR}/compile/${nn}.vg.txt > $temp_tokens_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},compile_${nn}_lex"
     local_errs="${local_errs},${nn}_lex"
     return
   fi
 
-  run_parse $TEMP_TOKENS_FILE > $TEMP_VGT_FILE
+  run_parse $temp_tokens_file > $temp_vgt_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},compile_${nn}_parse"
     local_errs="${local_errs},${nn}_parse"
     return
   fi
 
-  run_codegen $TEMP_VGT_FILE | tr "'" '"'> $TEMP_VGA_FILE
+  run_codegen $temp_vgt_file | tr "'" '"'> $temp_vga_file
   if [ $? -ne 0 ]; then
     local_errs="${local_errs},${nn}_codegen"
     ERRS="${ERRS},compile_${nn}_codegen"
@@ -224,9 +224,9 @@ test_compile_nn() {
   fi
 
   if [ "$local_errs" = "" ]; then
-    ruby test_common/diff.rb asm $exp_file $TEMP_VGA_FILE
+    ruby test_common/diff.rb asm $exp_file $temp_vga_file
     if [ $? -ne 0 ]; then
-      # meld $exp_file $TEMP_VGA_FILE &
+      # meld $exp_file $temp_vga_file &
 
       ERRS="${ERRS},compile_${nn}_diff"
       return
