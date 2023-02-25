@@ -103,6 +103,7 @@ test_json_nn() {
 
 test_json() {
   # TODO json-fmt が利用可能になったら有効化する
+  echo "skip test_json"
   return
 
   local ids="$(get_ids $MAX_ID_JSON "$@")"
@@ -183,6 +184,10 @@ test_parse_nn() {
 }
 
 test_parse() {
+  # TODO json-fmt が利用可能になったら有効化する
+  echo "skip test_parse"
+  return
+
   local ids="$(get_ids $MAX_ID_PARSE "$@")"
 
   for id in $ids; do
@@ -263,12 +268,12 @@ test_all() {
     return
   fi
 
-  # echo "==== parse ===="
-  # test_parse
-  # if [ $? -ne 0 ]; then
-  #   ERRS="${ERRS},parse"
-  #   return
-  # fi
+  echo "==== parse ===="
+  test_parse
+  if [ $? -ne 0 ]; then
+    ERRS="${ERRS},parse"
+    return
+  fi
 
   echo "==== compile ===="
   test_compile
@@ -299,9 +304,9 @@ container_main() {
       test_lex "$@"
       postproc "lex"
 
-    # parse | p* )  #task: Run parse tests
-    #   test_parse "$@"
-    #   postproc "parse"
+  ;; parse | p* )  #task: Run parse tests
+      test_parse "$@"
+      postproc "parse"
 
   ;; compile | c* )  #task: Run compile tests
       test_compile "$@"
