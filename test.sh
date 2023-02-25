@@ -276,7 +276,7 @@ test_all() {
   echo "==== compile ===="
   test_compile
   if [ $? -ne 0 ]; then
-    ERRS="${ERRS},compile"
+    ERRS="${ERRS},all_compile"
     return
   fi
 }
