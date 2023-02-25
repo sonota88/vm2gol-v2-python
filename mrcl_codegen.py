@@ -201,12 +201,12 @@ def gen_while(fn_arg_names, lvar_names, rest):
 
     gen_expr(fn_arg_names, lvar_names, cond_expr)
 
-    print(f"  cp 1 reg_b")
+    print(f"  cp 0 reg_b")
     print(f"  compare")
 
-    print(f"  jump_eq {label_true}")
+    print(f"  jump_eq {label_end}")
 
-    print(f"  jump {label_end}")
+    print(f"  jump {label_true}")
 
     print(f"label {label_true}")
 
