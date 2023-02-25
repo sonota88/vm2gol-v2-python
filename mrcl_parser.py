@@ -305,12 +305,8 @@ def parse_case():
 
     when_clauses = []
 
-    while(True):
-        when_clause = _parse_when_clause()
-        if when_clause is None:
-            break
-        else:
-            when_clauses.append(when_clause)
+    while peek().value != "}":
+        when_clauses.append(_parse_when_clause())
 
     consume("}")
 
