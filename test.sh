@@ -14,6 +14,7 @@ readonly TEST_DIR="${PROJECT_DIR}/test_common"
 readonly TEST_COMMON_DIR="${PROJECT_DIR}/test_common"
 readonly TEMP_DIR="${PROJECT_DIR}/z_tmp"
 
+readonly MAX_ID_JSON=8
 readonly MAX_ID_LEX=3
 readonly MAX_ID_PARSE=2
 readonly MAX_ID_COMPILE=27
