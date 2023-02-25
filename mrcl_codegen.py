@@ -206,10 +206,6 @@ def gen_while(fn_arg_names, lvar_names, rest):
 
     print(f"  jump_eq {label_end}")
 
-    print(f"  jump {label_true}")
-
-    print(f"label {label_true}")
-
     gen_stmts(fn_arg_names, lvar_names, body)
     print(f"  jump {label_begin}")
     print(f"label {label_end}")
