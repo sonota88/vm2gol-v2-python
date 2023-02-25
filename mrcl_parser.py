@@ -87,14 +87,8 @@ def _parse_arg():
     global pos
 
     t = peek()
-    if t.type == "ident":
-        pos += 1
-        return t.value
-    elif t.type == "int":
-        pos += 1
-        return int(t.value)
-    else:
-        raise parse_error(t)
+    pos += 1
+    return t.get_value()
 
 def parse_args():
     args = []
@@ -181,13 +175,7 @@ def _parse_expr_factor():
 
     if t.type == "int" or t.type == "ident":
         pos += 1
-
-        if t.type == "int":
-            return int(t.value)
-        elif t.type == "ident":
-            return t.value
-        else:
-            raise Exception("invalid type")
+        return t.get_value()
     elif t.type == "sym":
         consume("(")
         expr = parse_expr()

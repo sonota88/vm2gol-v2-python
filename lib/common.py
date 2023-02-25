@@ -9,3 +9,11 @@ class Token:
 
     def __repr__(self):
         return "(" + self.type + ": " + str(self.value) + ")"
+
+    def get_value(self):
+        if self.type == "ident":
+            return self.value
+        elif self.type == "int":
+            return int(self.value)
+        else:
+            raise Exception("invalid type")
