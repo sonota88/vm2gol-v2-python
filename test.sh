@@ -10,7 +10,7 @@ print_project_dir() {
 }
 
 readonly PROJECT_DIR="$(print_project_dir)"
-readonly TEST_DIR="${PROJECT_DIR}/test_common"
+readonly TEST_DIR="${PROJECT_DIR}/test"
 readonly TEST_COMMON_DIR="${PROJECT_DIR}/test_common"
 readonly TEMP_DIR="${PROJECT_DIR}/z_tmp"
 
