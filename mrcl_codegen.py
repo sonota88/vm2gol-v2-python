@@ -231,10 +231,10 @@ def gen_case(fn_arg_names, lvar_names, when_clauses):
 
         gen_expr(fn_arg_names, lvar_names, cond)
 
-        print(f"  cp 1 reg_b")
+        print(f"  cp 0 reg_b")
         print(f"  compare")
-        print(f"  jump_eq {label_when_head}_{when_idx}")
-        print(f"  jump {label_end_when_head}_{when_idx}")
+        print(f"  jump_eq {label_end_when_head}_{when_idx}")
+        print(f"  jump {label_when_head}_{when_idx}")
 
         print(f"label {label_when_head}_{when_idx}")
 
