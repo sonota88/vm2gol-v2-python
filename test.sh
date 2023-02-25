@@ -203,6 +203,7 @@ test_compile_nn() {
   local local_errs=""
   local exp_file="${TEST_COMMON_DIR}/compile/exp_${nn}.vga.txt"
 
+  echo "  lex" >&2
   run_lex ${TEST_COMMON_DIR}/compile/${nn}.vg.txt > $temp_tokens_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},compile_${nn}_lex"
@@ -210,6 +211,7 @@ test_compile_nn() {
     return
   fi
 
+  echo "  parse" >&2
   run_parse $temp_tokens_file > $temp_vgt_file
   if [ $? -ne 0 ]; then
     ERRS="${ERRS},compile_${nn}_parse"
@@ -217,6 +219,7 @@ test_compile_nn() {
     return
   fi
 
+  echo "  codegen" >&2
   run_codegen $temp_vgt_file | tr "'" '"'> $temp_vga_file
   if [ $? -ne 0 ]; then
     local_errs="${local_errs},${nn}_codegen"
