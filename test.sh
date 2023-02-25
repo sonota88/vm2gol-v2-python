@@ -21,7 +21,7 @@ readonly MAX_ID_COMPILE=27
 
 ERRS=""
 
-readonly RUNNER_CMD=python
+readonly RUNNER_CMD=python3
 
 run_test_json() {
   local infile="$1"; shift
@@ -280,10 +280,16 @@ test_all() {
 
 # --------------------------------
 
-main() {
+container_main() {
+  local cmd=
+  if [ $# -ge 1 ]; then
+    cmd="$1"; shift
+  else
+    cmd="show_tasks"
+  fi
+
   setup
 
-  local cmd="$1"; shift
   case $cmd in
     json | j* )     #task: Run json tests
       test_json "$@"
@@ -314,4 +320,13 @@ main() {
 
 # --------------------------------
 
-main "$@"
+in_container() {
+  env | grep --quiet IN_CONTAINER
+}
+
+if (in_container); then
+  container_main "$@"
+else
+  # Run in container
+  ./docker.sh run bash test.sh "$@"
+fi
