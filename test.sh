@@ -240,13 +240,6 @@ test_compile() {
   for id in $ids; do
     test_compile_nn $(printf "%02d" $id)
   done
-
-  if [ "$ERRS" = "" ]; then
-    echo "ok"
-  else
-    echo "----"
-    echo "FAILED: ${ERRS}"
-  fi
 }
 
 # --------------------------------
