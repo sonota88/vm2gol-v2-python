@@ -144,6 +144,18 @@ def _gen_expr_binary(fn_arg_names, lvar_names, expr):
     else:
         raise not_yet_impl("todo", operator)
 
+def _gen_funcall(fn_arg_names, lvar_names, funcall):
+    fn_name = funcall[0]
+    fn_args = funcall[1:]
+
+    for fn_arg in reversed(fn_args):
+        gen_expr(fn_arg_names, lvar_names, fn_arg)
+        print(f"  push reg_a")
+
+    gen_vm_comment(f"call  {fn_name}")
+    print(f"  call {fn_name}")
+    print(f"  add_sp {len(fn_args)}")
+
 def gen_call(fn_arg_names, lvar_names, stmt_rest):
     fn_name = stmt_rest[0]
     fn_args = stmt_rest[1:] or []
