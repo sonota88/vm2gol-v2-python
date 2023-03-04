@@ -156,7 +156,8 @@ def _gen_funcall(fn_arg_names, lvar_names, funcall):
     print(f"  call {fn_name}")
     print(f"  add_sp {len(fn_args)}")
 
-def gen_call(fn_arg_names, lvar_names, funcall):
+def gen_call(fn_arg_names, lvar_names, stmt):
+    funcall = stmt[1:]
     _gen_funcall(fn_arg_names, lvar_names, funcall)
 
 def gen_call_set(fn_arg_names, lvar_names, stmt_rest):
@@ -260,7 +261,7 @@ def gen_stmt(fn_arg_names, lvar_names, stmt):
     stmt_rest = stmt[1:]
 
     if stmt_head == "call":
-        gen_call(fn_arg_names, lvar_names, stmt_rest)
+        gen_call(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "call_set":
         gen_call_set(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "set":
