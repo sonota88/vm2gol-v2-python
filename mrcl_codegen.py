@@ -179,14 +179,7 @@ def gen_set(fn_arg_names, lvar_names, rest):
     dest = rest[0]
     expr = rest[1]
 
-    gen_expr(fn_arg_names, lvar_names, expr)
-    src_val = "reg_a"
-
-    if dest in lvar_names:
-        disp = to_lvar_addr(lvar_names, dest)
-        print(f"  cp {src_val} [bp:{disp}]")
-    else:
-        raise not_yet_impl("dest", dest)
+    _gen_set(fn_arg_names, lvar_names, dest, expr)
 
 def gen_return(_, lvar_names, stmt_rest):
     retval = stmt_rest[0]
@@ -289,7 +282,9 @@ def gen_stmts(fn_arg_names, lvar_names, stmts):
 def gen_var(fn_arg_names, lvar_names, stmt_rest):
     print("  sub_sp 1")
     if len(stmt_rest) == 2:
-        gen_set(fn_arg_names, lvar_names, stmt_rest)
+        dest = stmt_rest[0]
+        expr = stmt_rest[1]
+        _gen_set(fn_arg_names, lvar_names, dest, expr)
 
 def gen_func_def(rest):
     fn_name = rest[0]
