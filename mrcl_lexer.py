@@ -13,7 +13,7 @@ def read_file(path):
 
 def to_json(token):
     return json.dumps(
-        [token.lineno, token.type, token.value]
+        [token.lineno, token.kind, token.value]
     )
 
 def is_kw(value):

@@ -58,7 +58,7 @@ def peek(offset = 0):
 
 def rest_head():
     return list(
-        map(lambda t: f"{t.type}<{t.value}>", (
+        map(lambda t: f"{t.kind}<{t.value}>", (
             tokens[pos : pos + 8]
         ))
     )
@@ -173,10 +173,10 @@ def _parse_expr_factor():
 
     t = peek()
 
-    if t.type == "int" or t.type == "ident":
+    if t.kind == "int" or t.kind == "ident":
         pos += 1
         return t.get_value()
-    elif t.type == "sym":
+    elif t.kind == "sym":
         consume("(")
         expr = parse_expr()
         consume(")")

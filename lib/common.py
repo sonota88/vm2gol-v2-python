@@ -1,6 +1,6 @@
 class Token:
-    def __init__(self, type, value, lineno):
-        self.type = type
+    def __init__(self, kind, value, lineno):
+        self.kind = kind
         self.value = value
         self.lineno = lineno
 
@@ -8,12 +8,12 @@ class Token:
         return self.__repr()
 
     def __repr__(self):
-        return "(" + self.type + ": " + str(self.value) + ")"
+        return "(" + self.kind + ": " + str(self.value) + ")"
 
     def get_value(self):
-        if self.type == "ident":
+        if self.kind == "ident":
             return self.value
-        elif self.type == "int":
+        elif self.kind == "int":
             return int(self.value)
         else:
-            raise Exception("invalid type")
+            raise Exception("invalid kind")
