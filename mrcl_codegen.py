@@ -137,7 +137,7 @@ def _gen_expr_binary(fn_arg_names, lvar_names, expr):
         _gen_expr_add()
     elif operator == "*":
         _gen_expr_mult()
-    elif operator == "eq":
+    elif operator == "==":
         _gen_expr_eq()
     elif operator == "neq":
         _gen_expr_neq()

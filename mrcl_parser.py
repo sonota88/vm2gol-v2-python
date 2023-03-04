@@ -195,7 +195,7 @@ def parse_expr():
     while(is_binop(peek())):
         op = peek().value
         if op == "==":
-            op = "eq"
+            op = "=="
         elif op == "!=":
             op = "neq"
         pos += 1
