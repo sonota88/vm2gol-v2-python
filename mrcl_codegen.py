@@ -316,8 +316,6 @@ def gen_top_stmts(rest):
 
         if stmt_head == "func":
             gen_func_def(stmt_rest)
-        elif stmt_head == "_cmt":
-            gen_vm_comment(stmt_rest[0])
         else:
             raise not_yet_impl("stmt_head", stmt_head)
 
