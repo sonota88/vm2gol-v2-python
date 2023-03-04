@@ -197,7 +197,7 @@ def parse_expr():
         if op == "==":
             op = "=="
         elif op == "!=":
-            op = "neq"
+            op = "!="
         pos += 1
 
         expr_r = _parse_expr_factor()
