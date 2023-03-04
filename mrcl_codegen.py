@@ -165,6 +165,16 @@ def gen_call_set(fn_arg_names, lvar_names, stmt_rest):
     disp = to_lvar_addr(lvar_names, lvar_name)
     print(f"  cp reg_a [bp:{disp}]")
 
+def _gen_set(fn_arg_names, lvar_names, dest, expr):
+    gen_expr(fn_arg_names, lvar_names, expr)
+    src_val = "reg_a"
+
+    if dest in lvar_names:
+        disp = to_lvar_addr(lvar_names, dest)
+        print(f"  cp {src_val} [bp:{disp}]")
+    else:
+        raise not_yet_impl("dest", dest)
+
 def gen_set(fn_arg_names, lvar_names, rest):
     dest = rest[0]
     expr = rest[1]
