@@ -160,9 +160,9 @@ def gen_call(fn_arg_names, lvar_names, stmt):
     funcall = stmt[1:]
     _gen_funcall(fn_arg_names, lvar_names, funcall)
 
-def gen_call_set(fn_arg_names, lvar_names, stmt_rest):
-    lvar_name = stmt_rest[0]
-    funcall = stmt_rest[1]
+def gen_call_set(fn_arg_names, lvar_names, stmt):
+    lvar_name = stmt[1]
+    funcall = stmt[2]
 
     _gen_funcall(fn_arg_names, lvar_names, funcall)
 
@@ -263,7 +263,7 @@ def gen_stmt(fn_arg_names, lvar_names, stmt):
     if stmt_head == "call":
         gen_call(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "call_set":
-        gen_call_set(fn_arg_names, lvar_names, stmt_rest)
+        gen_call_set(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "set":
         gen_set(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "return":
