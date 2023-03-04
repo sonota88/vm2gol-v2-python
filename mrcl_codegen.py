@@ -156,23 +156,14 @@ def _gen_funcall(fn_arg_names, lvar_names, funcall):
     print(f"  call {fn_name}")
     print(f"  add_sp {len(fn_args)}")
 
-def gen_call(fn_arg_names, lvar_names, stmt_rest):
-    fn_name = stmt_rest[0]
-    fn_args = stmt_rest[1:] or []
-
-    for fn_arg in reversed(fn_args):
-        gen_expr(fn_arg_names, lvar_names, fn_arg)
-        print(f"  push reg_a")
-
-    gen_vm_comment(f"call  {fn_name}")
-    print(f"  call {fn_name}")
-    print(f"  add_sp {len(fn_args)}")
+def gen_call(fn_arg_names, lvar_names, funcall):
+    _gen_funcall(fn_arg_names, lvar_names, funcall)
 
 def gen_call_set(fn_arg_names, lvar_names, stmt_rest):
     lvar_name = stmt_rest[0]
     funcall = stmt_rest[1]
 
-    gen_call(fn_arg_names, lvar_names, funcall)
+    _gen_funcall(fn_arg_names, lvar_names, funcall)
 
     disp = to_lvar_addr(lvar_names, lvar_name)
     print(f"  cp reg_a [bp:{disp}]")
