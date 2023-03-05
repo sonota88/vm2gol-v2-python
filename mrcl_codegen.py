@@ -218,9 +218,10 @@ def gen_while(fn_arg_names, lvar_names, rest):
     print(f"label {label_end}")
     print("")
 
-def gen_case(fn_arg_names, lvar_names, when_clauses):
+def gen_case(fn_arg_names, lvar_names, stmt):
     global g_label_id
 
+    when_clauses = stmt[1:]
     g_label_id += 1
     label_id = g_label_id
 
@@ -269,7 +270,7 @@ def gen_stmt(fn_arg_names, lvar_names, stmt):
     elif stmt_head == "return":
         gen_return(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "case":
-        gen_case(fn_arg_names, lvar_names, stmt_rest)
+        gen_case(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "while":
         gen_while(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "_cmt":
