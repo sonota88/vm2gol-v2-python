@@ -290,10 +290,10 @@ def gen_var(fn_arg_names, lvar_names, stmt):
         expr = stmt[2]
         _gen_set(fn_arg_names, lvar_names, dest, expr)
 
-def gen_func_def(rest):
-    fn_name = rest[0]
-    fn_arg_names = rest[1]
-    body = rest[2]
+def gen_func_def(func_def):
+    fn_name = func_def[1]
+    fn_arg_names = func_def[2]
+    body = func_def[3]
 
     print("")
     print(f"label {fn_name}")
@@ -324,7 +324,7 @@ def gen_top_stmts(rest):
         stmt_rest = stmt[1:]
 
         if stmt_head == "func":
-            gen_func_def(stmt_rest)
+            gen_func_def(stmt)
         else:
             raise not_yet_impl("stmt_head", stmt_head)
 
