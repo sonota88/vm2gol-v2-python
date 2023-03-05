@@ -317,14 +317,16 @@ def gen_func_def(func_def):
     asm_epilogue()
     print("  ret")
 
-def gen_top_stmts(rest):
-    for stmt in rest:
-        stmt_head = stmt[0]
+def gen_top_stmts(tree):
+    top_stmts = tree[1:]
+
+    for top_stmt in top_stmts:
+        stmt_head = top_stmt[0]
 
         if stmt_head == "func":
-            gen_func_def(stmt)
+            gen_func_def(top_stmt)
         else:
-            raise not_yet_impl("stmt", stmt)
+            raise not_yet_impl("top_stmt", top_stmt)
 
 def gen_builtin_set_vram():
     print(f"")
@@ -350,10 +352,7 @@ def codegen(tree):
     print("  call main")
     print("  exit")
 
-    head = tree[0]
-    rest = tree[1:]
-
-    gen_top_stmts(rest)
+    gen_top_stmts(tree)
 
     print("#>builtins")
     gen_builtin_set_vram()
