@@ -306,10 +306,9 @@ def gen_func_def(func_def):
 
     for stmt in body:
         stmt_head = stmt[0]
-        stmt_rest = stmt[1:]
 
         if stmt_head == "var":
-            lvar_names.append(stmt_rest[0])
+            lvar_names.append(stmt[1])
             gen_var(fn_arg_names, lvar_names, stmt)
         else:
             gen_stmt(fn_arg_names, lvar_names, stmt)
