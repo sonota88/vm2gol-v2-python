@@ -189,11 +189,11 @@ def gen_return(_, lvar_names, stmt):
     retval = stmt[1]
     gen_expr([], lvar_names, retval)
 
-def gen_while(fn_arg_names, lvar_names, rest):
+def gen_while(fn_arg_names, lvar_names, stmt):
     global g_label_id
 
-    cond_expr = rest[0]
-    body = rest[1]
+    cond_expr = stmt[1]
+    body = stmt[2]
 
     g_label_id += 1
     label_id = g_label_id
@@ -272,7 +272,7 @@ def gen_stmt(fn_arg_names, lvar_names, stmt):
     elif stmt_head == "case":
         gen_case(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "while":
-        gen_while(fn_arg_names, lvar_names, stmt_rest)
+        gen_while(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "_cmt":
         gen_vm_comment(stmt_rest[0])
     elif stmt_head == "_debug":
