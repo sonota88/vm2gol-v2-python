@@ -259,7 +259,6 @@ def gen_debug(comment):
 
 def gen_stmt(fn_arg_names, lvar_names, stmt):
     stmt_head = stmt[0]
-    stmt_rest = stmt[1:]
 
     if stmt_head == "call":
         gen_call(fn_arg_names, lvar_names, stmt)
@@ -278,7 +277,7 @@ def gen_stmt(fn_arg_names, lvar_names, stmt):
     elif stmt_head == "_debug":
         gen_debug()
     else:
-        raise not_yet_impl("stmt_head", stmt_head)
+        raise not_yet_impl("stmt", stmt)
 
 def gen_stmts(fn_arg_names, lvar_names, stmts):
     for stmt in stmts:
