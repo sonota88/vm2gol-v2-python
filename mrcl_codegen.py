@@ -179,9 +179,9 @@ def _gen_set(fn_arg_names, lvar_names, dest, expr):
     else:
         raise not_yet_impl("dest", dest)
 
-def gen_set(fn_arg_names, lvar_names, rest):
-    dest = rest[0]
-    expr = rest[1]
+def gen_set(fn_arg_names, lvar_names, stmt):
+    dest = stmt[1]
+    expr = stmt[2]
 
     _gen_set(fn_arg_names, lvar_names, dest, expr)
 
@@ -265,7 +265,7 @@ def gen_stmt(fn_arg_names, lvar_names, stmt):
     elif stmt_head == "call_set":
         gen_call_set(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "set":
-        gen_set(fn_arg_names, lvar_names, stmt_rest)
+        gen_set(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "return":
         gen_return(fn_arg_names, lvar_names, stmt_rest)
     elif stmt_head == "case":
