@@ -320,12 +320,11 @@ def gen_func_def(func_def):
 def gen_top_stmts(rest):
     for stmt in rest:
         stmt_head = stmt[0]
-        stmt_rest = stmt[1:]
 
         if stmt_head == "func":
             gen_func_def(stmt)
         else:
-            raise not_yet_impl("stmt_head", stmt_head)
+            raise not_yet_impl("stmt", stmt)
 
 def gen_builtin_set_vram():
     print(f"")
