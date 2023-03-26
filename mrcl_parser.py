@@ -130,7 +130,7 @@ def parse_func():
 
     return ["func", func_name, args, stmts]
 
-def parse_var_declare():
+def _parse_var_declare():
     global pos
 
     t = peek()
@@ -141,7 +141,7 @@ def parse_var_declare():
 
     return ["var", var_name]
 
-def parse_var_init():
+def _parse_var_init():
     global pos
 
     t = peek()
@@ -162,9 +162,9 @@ def parse_var():
     t = peek(1)
 
     if t.value == ";":
-        return parse_var_declare()
+        return _parse_var_declare()
     elif t.value == "=":
-        return parse_var_init()
+        return _parse_var_init()
     else:
         raise parse_error(t)
 
