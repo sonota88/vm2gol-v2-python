@@ -194,10 +194,6 @@ def parse_expr():
 
     while(is_binop(peek())):
         op = peek().value
-        if op == "==":
-            op = "=="
-        elif op == "!=":
-            op = "!="
         pos += 1
 
         expr_r = _parse_expr_factor()
