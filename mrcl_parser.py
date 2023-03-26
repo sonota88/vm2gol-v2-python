@@ -284,10 +284,6 @@ def parse_while():
     return ["while", expr, stmts]
 
 def _parse_when_clause():
-    t = peek()
-    if t.value == "}":
-        return None
-
     consume("(")
     expr = parse_expr()
     consume(")")
