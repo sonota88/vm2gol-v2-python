@@ -200,7 +200,6 @@ def gen_while(fn_arg_names, lvar_names, stmt):
 
     label_begin = f"while_{label_id}"
     label_end = f"end_while_{label_id}"
-    label_true = f"true_{label_id}"
 
     print("")
 
@@ -228,7 +227,6 @@ def gen_case(fn_arg_names, lvar_names, stmt):
     when_idx = -1
 
     label_end = f"end_case_{label_id}"
-    label_when_head = f"when_{label_id}"
     label_end_when_head = f"end_when_{label_id}"
 
     for when_clause in when_clauses:
