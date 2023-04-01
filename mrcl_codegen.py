@@ -193,7 +193,7 @@ def gen_while(fn_arg_names, lvar_names, stmt):
     global g_label_id
 
     cond_expr = stmt[1]
-    body = stmt[2]
+    stmts = stmt[2]
 
     g_label_id += 1
     label_id = g_label_id
@@ -212,7 +212,7 @@ def gen_while(fn_arg_names, lvar_names, stmt):
 
     print(f"  jump_eq {label_end}")
 
-    gen_stmts(fn_arg_names, lvar_names, body)
+    gen_stmts(fn_arg_names, lvar_names, stmts)
     print(f"  jump {label_begin}")
     print(f"label {label_end}")
     print("")
@@ -232,7 +232,7 @@ def gen_case(fn_arg_names, lvar_names, stmt):
     for when_clause in when_clauses:
         when_idx += 1
         cond = when_clause[0]
-        rest = when_clause[1:]
+        stmts = when_clause[1:]
         print(f"  # 条件 {label_id}_{when_idx}: {cond}")
 
         gen_expr(fn_arg_names, lvar_names, cond)
@@ -241,7 +241,7 @@ def gen_case(fn_arg_names, lvar_names, stmt):
         print(f"  compare")
         print(f"  jump_eq {label_end_when_head}_{when_idx}")
 
-        gen_stmts(fn_arg_names, lvar_names, rest)
+        gen_stmts(fn_arg_names, lvar_names, stmts)
 
         print(f"  jump {label_end}")
 
@@ -291,7 +291,7 @@ def gen_var(fn_arg_names, lvar_names, stmt):
 def gen_func_def(func_def):
     fn_name = func_def[1]
     fn_arg_names = func_def[2]
-    body = func_def[3]
+    stmts = func_def[3]
 
     print("")
     print(f"label {fn_name}")
@@ -302,7 +302,7 @@ def gen_func_def(func_def):
 
     lvar_names = []
 
-    for stmt in body:
+    for stmt in stmts:
         stmt_head = stmt[0]
 
         if stmt_head == "var":
