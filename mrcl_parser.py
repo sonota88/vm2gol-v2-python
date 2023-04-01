@@ -280,6 +280,7 @@ def parse_while():
     return ["while", expr, stmts]
 
 def _parse_when_clause():
+    consume("when")
     consume("(")
     expr = parse_expr()
     consume(")")
@@ -293,14 +294,10 @@ def _parse_when_clause():
 def parse_case():
     consume("case")
 
-    consume("{")
-
     when_clauses = []
 
-    while peek().value != "}":
+    while peek().value == "when":
         when_clauses.append(_parse_when_clause())
-
-    consume("}")
 
     return ["case", *when_clauses]
 

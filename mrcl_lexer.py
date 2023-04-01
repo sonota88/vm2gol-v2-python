@@ -25,6 +25,7 @@ def is_kw(value):
         "call",
         "return",
         "case",
+        "when",
         "while",
         "_cmt",
         "_debug"
