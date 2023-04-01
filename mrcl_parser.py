@@ -196,8 +196,8 @@ def parse_expr():
         op = peek().value
         pos += 1
 
-        expr_r = _parse_expr_factor()
-        expr = [op, expr, expr_r]
+        factor = _parse_expr_factor()
+        expr = [op, expr, factor]
 
     return expr
 
