@@ -169,6 +169,10 @@ def gen_call_set(fn_arg_names, lvar_names, stmt):
     disp = to_lvar_addr(lvar_names, lvar_name)
     print(f"  cp reg_a [bp:{disp}]")
 
+def gen_return(_, lvar_names, stmt):
+    retval = stmt[1]
+    gen_expr([], lvar_names, retval)
+
 def _gen_set(fn_arg_names, lvar_names, dest, expr):
     gen_expr(fn_arg_names, lvar_names, expr)
     src_val = "reg_a"
@@ -184,10 +188,6 @@ def gen_set(fn_arg_names, lvar_names, stmt):
     expr = stmt[2]
 
     _gen_set(fn_arg_names, lvar_names, dest, expr)
-
-def gen_return(_, lvar_names, stmt):
-    retval = stmt[1]
-    gen_expr([], lvar_names, retval)
 
 def gen_while(fn_arg_names, lvar_names, stmt):
     global g_label_id
