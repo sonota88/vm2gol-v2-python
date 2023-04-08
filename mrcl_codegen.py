@@ -266,10 +266,10 @@ def gen_stmt(fn_arg_names, lvar_names, stmt):
         gen_set(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "return":
         gen_return(fn_arg_names, lvar_names, stmt)
-    elif stmt_head == "case":
-        gen_case(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "while":
         gen_while(fn_arg_names, lvar_names, stmt)
+    elif stmt_head == "case":
+        gen_case(fn_arg_names, lvar_names, stmt)
     elif stmt_head == "_cmt":
         gen_vm_comment(stmt[1])
     elif stmt_head == "_debug":
