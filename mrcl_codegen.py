@@ -282,7 +282,7 @@ def gen_stmts(fn_arg_names, lvar_names, stmts):
         gen_stmt(fn_arg_names, lvar_names, stmt)
 
 def gen_var(fn_arg_names, lvar_names, stmt):
-    print("  sub_sp 1")
+    print("  add_sp -1")
     if len(stmt) == 3:
         dest = stmt[1]
         expr = stmt[2]
