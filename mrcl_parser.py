@@ -166,7 +166,7 @@ def parse_var():
     elif t.value == "=":
         return _parse_var_init()
     else:
-        raise parse_error(t)
+        raise parse_error(f"unexpected token ({t})")
 
 def _parse_expr_factor():
     global pos
@@ -182,7 +182,7 @@ def _parse_expr_factor():
         consume(")")
         return expr
     else:
-        raise parse_error()
+        raise parse_error(f"unexpected token ({t})")
 
 def is_binop(t):
     return t.value in ["+", "*", "==", "!="]
