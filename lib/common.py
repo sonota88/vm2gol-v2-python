@@ -5,10 +5,10 @@ class Token:
         self.lineno = lineno
 
     def __str__(self):
-        return self.__repr()
+        return self.__repr__()
 
     def __repr__(self):
-        return "(" + self.kind + ": " + str(self.value) + ")"
+        return f"Token(kind='{self.kind}', value='{self.value}', lineno={self.lineno})"
 
     def get_value(self):
         if self.kind == "ident":
