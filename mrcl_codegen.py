@@ -164,9 +164,9 @@ def gen_call_set(fn_arg_names, lvar_names, stmt):
     disp = to_lvar_addr(lvar_names, lvar_name)
     print(f"  cp reg_a [bp:{disp}]")
 
-def gen_return(_, lvar_names, stmt):
+def gen_return(fn_arg_names, lvar_names, stmt):
     retval = stmt[1]
-    gen_expr([], lvar_names, retval)
+    gen_expr(fn_arg_names, lvar_names, retval)
 
 def _gen_set(fn_arg_names, lvar_names, dest, expr):
     gen_expr(fn_arg_names, lvar_names, expr)
