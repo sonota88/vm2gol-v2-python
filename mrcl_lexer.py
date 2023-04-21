@@ -3,13 +3,7 @@ import re
 import sys
 
 from lib.common import Token
-
-def read_file(path):
-    text = ""
-    with open(path) as f:
-        for line in f:
-            text += line
-    return text
+from lib.common import read_stdin_all
 
 def to_json(token):
     return json.dumps(
@@ -85,8 +79,8 @@ def tokenize(src):
 
     return tokens
 
-in_file = sys.argv[1]
-tokens = tokenize(read_file(in_file))
+src = read_stdin_all()
+tokens = tokenize(src)
 
 for token in tokens:
     print(to_json(token))

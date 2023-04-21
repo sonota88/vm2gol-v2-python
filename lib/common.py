@@ -1,3 +1,13 @@
+import sys
+
+def read_stdin_all():
+    str = ""
+    while True:
+        line = sys.stdin.readline()
+        if not line: break
+        str += line
+    return str
+
 class Token:
     def __init__(self, kind, value, lineno):
         self.kind = kind

@@ -32,7 +32,7 @@ run_test_json() {
 run_lex() {
   local infile="$1"; shift
 
-  $RUNNER_CMD mrcl_lexer.py $infile
+  cat $infile | $RUNNER_CMD mrcl_lexer.py
 }
 
 run_parse() {
