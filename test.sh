@@ -174,7 +174,7 @@ test_parse_nn() {
     return
   fi
 
-  ruby test_common/diff.rb json $exp_file $temp_vgt_file
+  ruby test_common/diff.rb json-fmt $exp_file $temp_vgt_file
   if [ $? -ne 0 ]; then
     # meld $exp_file $temp_vga_file &
 
@@ -184,10 +184,6 @@ test_parse_nn() {
 }
 
 test_parse() {
-  # TODO json-fmt が利用可能になったら有効化する
-  echo "skip test_parse"
-  return
-
   local ids="$(get_ids $MAX_ID_PARSE "$@")"
 
   for id in $ids; do
