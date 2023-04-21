@@ -5,14 +5,14 @@ https://memo88.hatenablog.com/entry/2020/08/19/065056
 
 ```sh
   $ LANG=C wc -l mrcl_{lexer,parser,codegen}.py lib/common.py
-   92 mrcl_lexer.py
-  390 mrcl_parser.py
-  366 mrcl_codegen.py
-   19 lib/common.py
-  867 total
+   86 mrcl_lexer.py
+  384 mrcl_parser.py
+  359 mrcl_codegen.py
+   29 lib/common.py
+  858 total
 
   $ cat mrcl_{lexer,parser,codegen}.py lib/common.py | grep -v '^ *#' | wc -l
-858
+849
 ```
 
 ```
