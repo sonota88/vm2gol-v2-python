@@ -120,7 +120,7 @@ test_lex_nn() {
 
   echo "case ${nn}"
 
-  local input_file="${TEST_COMMON_DIR}/lex/${nn}.vg.txt"
+  local input_file="${TEST_COMMON_DIR}/lex/${nn}.mrcl"
   local temp_tokens_file="${TEMP_DIR}/test.tokens.txt"
   local exp_file="${TEST_COMMON_DIR}/lex/exp_${nn}.txt"
 
@@ -154,7 +154,7 @@ test_parse_nn() {
 
   echo "case ${nn}"
 
-  local input_file="${TEST_COMMON_DIR}/parse/${nn}.vg.txt"
+  local input_file="${TEST_COMMON_DIR}/parse/${nn}.mrcl"
   local temp_tokens_file="${TEMP_DIR}/test.tokens.txt"
   local temp_vgt_file="${TEMP_DIR}/test.vgt.json"
   local exp_file="${TEST_COMMON_DIR}/parse/exp_${nn}.vgt.json"
@@ -205,7 +205,7 @@ test_compile_nn() {
   local exp_file="${TEST_COMMON_DIR}/compile/exp_${nn}.vga.txt"
 
   echo "  lex" >&2
-  run_lex ${TEST_COMMON_DIR}/compile/${nn}.vg.txt > $temp_tokens_file
+  run_lex ${TEST_COMMON_DIR}/compile/${nn}.mrcl > $temp_tokens_file
   if [ $? -ne 0 ]; then
     local_errs="${local_errs},${nn}_lex"
     ERRS="${ERRS},compile_${nn}_lex"
