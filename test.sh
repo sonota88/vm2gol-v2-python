@@ -44,7 +44,7 @@ run_parse() {
 run_codegen() {
   local infile="$1"; shift
 
-  $RUNNER_CMD mrcl_codegen.py $infile
+  cat $infile | $RUNNER_CMD mrcl_codegen.py
 }
 
 # --------------------------------

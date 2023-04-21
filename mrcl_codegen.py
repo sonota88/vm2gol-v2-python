@@ -3,6 +3,8 @@ import re
 import sys
 from pprint import pformat
 
+from lib.common import read_stdin_all
+
 def puts_e(arg):
     print(arg, file=sys.stderr)
 
@@ -13,13 +15,6 @@ def p_e(arg):
     puts_e(inspect(arg))
 
 # --------------------------------
-
-def read_file(path):
-    text = ""
-    with open(path) as f:
-        for line in f:
-            text += line
-    return text
 
 def not_yet_impl(k, v):
     return Exception(f"{k} ({v})")
@@ -359,8 +354,6 @@ def codegen(tree):
 
 # --------------------------------
 
-src = read_file(sys.argv[1])
-
+src = read_stdin_all()
 tree = json.loads(src)
-
 codegen(tree)
