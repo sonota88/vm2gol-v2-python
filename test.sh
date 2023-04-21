@@ -292,7 +292,7 @@ container_main() {
   setup
 
   case $cmd in
-    json | j* )     #task: Run json tests
+    json | j* )      #task: Run json tests
       test_json "$@"
       postproc "json"
 
@@ -300,7 +300,7 @@ container_main() {
       test_lex "$@"
       postproc "lex"
 
-  ;; parse | p* )  #task: Run parse tests
+  ;; parse | p* )    #task: Run parse tests
       test_parse "$@"
       postproc "parse"
 
@@ -308,7 +308,7 @@ container_main() {
       test_compile "$@"
       postproc "compile"
 
-  ;; all | a* )     #task: Run all tests
+  ;; all | a* )      #task: Run all tests
       test_all "$@"
       postproc "all"
 
