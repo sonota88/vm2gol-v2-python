@@ -38,7 +38,7 @@ run_lex() {
 run_parse() {
   local infile="$1"; shift
 
-  $RUNNER_CMD mrcl_parser.py $infile
+  cat $infile | $RUNNER_CMD mrcl_parser.py
 }
 
 run_codegen() {

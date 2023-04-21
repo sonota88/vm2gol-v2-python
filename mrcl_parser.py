@@ -3,6 +3,7 @@ import sys
 from pprint import pformat
 
 from lib.common import Token
+from lib.common import read_stdin_all
 
 def puts_e(arg):
     print(arg, file=sys.stderr)
@@ -13,24 +14,17 @@ def inspect(arg):
 def p_e(arg):
     puts_e(inspect(arg))
 
-def read_file(path):
-    text = ""
-    with open(path) as f:
-        for line in f:
-            text += line
-    return text
-
 def to_json(data):
     return json.dumps(data, indent=2)
 
 def parse_json(json_):
     return json.loads(json_)
 
-def read_tokens(path):
+def read_tokens(src):
     tokens = []
 
-    with open(path) as f:
-        for line in f:
+    for line in src.split("\n"):
+        if line != "":
             parts = parse_json(line)
             tokens.append(Token(parts[1], parts[2], parts[0]))
 
@@ -380,8 +374,8 @@ def parse():
 
 # --------------------------------
 
-in_file = sys.argv[1]
-tokens = read_tokens(in_file)
+src = read_stdin_all()
+tokens = read_tokens(src)
 # p_e(tokens)
 
 tree = parse()
