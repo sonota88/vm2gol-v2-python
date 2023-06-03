@@ -7,12 +7,12 @@ https://memo88.hatenablog.com/entry/2020/08/19/065056
   $ LANG=C wc -l mrcl_{lexer,parser,codegen}.py lib/common.py
    86 mrcl_lexer.py
   384 mrcl_parser.py
-  342 mrcl_codegen.py
+  335 mrcl_codegen.py
    29 lib/common.py
-  841 total
+  834 total
 
   $ cat mrcl_{lexer,parser,codegen}.py lib/common.py | grep -v '^ *#' | wc -l
-832
+825
 ```
 
 ```

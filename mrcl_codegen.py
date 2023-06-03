@@ -23,6 +23,11 @@ def not_yet_impl(k, v):
 
 g_label_id = 0
 
+def get_label_id():
+    global g_label_id
+    g_label_id += 1
+    return g_label_id
+
 def asm_prologue():
     print("  push bp")
     print("  cp sp bp")
@@ -52,10 +57,7 @@ def _gen_expr_mult():
     print("  mult_ab")
 
 def _gen_expr_eq_neq(name, then_val, else_val):
-    global g_label_id
-
-    g_label_id += 1
-    label_id = g_label_id
+    label_id = get_label_id()
 
     label_end = f"end_{name}_{label_id}"
     label_then = f"then_{label_id}"
@@ -98,8 +100,6 @@ def gen_expr(fn_arg_names, lvar_names, expr):
         raise Exception("expr", expr)
 
 def _gen_expr_binary(fn_arg_names, lvar_names, expr):
-    global g_label_id
-
     operator = expr[0]
     args = expr[1:]
 
@@ -168,13 +168,10 @@ def gen_set(fn_arg_names, lvar_names, stmt):
     _gen_set(fn_arg_names, lvar_names, dest, expr)
 
 def gen_while(fn_arg_names, lvar_names, stmt):
-    global g_label_id
-
     cond_expr = stmt[1]
     stmts = stmt[2]
 
-    g_label_id += 1
-    label_id = g_label_id
+    label_id = get_label_id()
 
     label_begin = f"while_{label_id}"
     label_end = f"end_while_{label_id}"
@@ -196,12 +193,8 @@ def gen_while(fn_arg_names, lvar_names, stmt):
     print("")
 
 def gen_case(fn_arg_names, lvar_names, stmt):
-    global g_label_id
-
     when_clauses = stmt[1:]
-    g_label_id += 1
-    label_id = g_label_id
-
+    label_id = get_label_id()
     when_idx = -1
 
     label_end = f"end_case_{label_id}"
