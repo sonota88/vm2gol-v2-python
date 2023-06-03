@@ -3,10 +3,7 @@ import sys
 from pprint import pformat
 
 from lib.common import Token
-from lib.common import read_stdin_all, puts_e
-
-def inspect(arg):
-    return pformat(arg, indent=4)
+from lib.common import read_stdin_all, puts_e, inspect
 
 def p_e(arg):
     puts_e(inspect(arg))

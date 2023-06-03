@@ -3,6 +3,9 @@ import sys
 def puts_e(arg):
     print(arg, file=sys.stderr)
 
+def inspect(arg):
+    return pformat(arg, indent=4)
+
 def read_stdin_all():
     str = ""
     while True:
