@@ -51,13 +51,13 @@ def _gen_expr_mult():
     print("  pop reg_a")
     print("  mult_ab")
 
-def _gen_expr_eq():
+def _gen_expr_eq_neq(name, then_val, else_val):
     global g_label_id
 
     g_label_id += 1
     label_id = g_label_id
 
-    label_end = f"end_eq_{label_id}"
+    label_end = f"end_{name}_{label_id}"
     label_then = f"then_{label_id}"
 
     print(f"  pop reg_b")
@@ -66,36 +66,19 @@ def _gen_expr_eq():
     print(f"  compare")
     print(f"  jump_eq {label_then}")
 
-    print(f"  cp 0 reg_a")
+    print(f"  cp {else_val} reg_a")
     print(f"  jump {label_end}")
 
     print(f"label {label_then}")
-    print(f"  cp 1 reg_a")
+    print(f"  cp {then_val} reg_a")
 
     print(f"label {label_end}")
+
+def _gen_expr_eq():
+    _gen_expr_eq_neq("eq", 1, 0)
 
 def _gen_expr_neq():
-    global g_label_id
-
-    g_label_id += 1
-    label_id = g_label_id
-
-    label_end = f"end_neq_{label_id}"
-    label_then = f"then_{label_id}"
-
-    print(f"  pop reg_b")
-    print(f"  pop reg_a")
-
-    print(f"  compare")
-    print(f"  jump_eq {label_then}")
-
-    print(f"  cp 1 reg_a")
-    print(f"  jump {label_end}")
-
-    print(f"label {label_then}")
-    print(f"  cp 0 reg_a")
-
-    print(f"label {label_end}")
+    _gen_expr_eq_neq("neq", 0, 1)
 
 def gen_expr(fn_arg_names, lvar_names, expr):
     if type(expr) == int:
