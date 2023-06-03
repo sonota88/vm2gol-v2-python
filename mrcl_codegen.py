@@ -3,10 +3,7 @@ import re
 import sys
 from pprint import pformat
 
-from lib.common import read_stdin_all, puts_e, inspect
-
-def p_e(arg):
-    puts_e(inspect(arg))
+from lib.common import read_stdin_all, puts_e, inspect, p_e
 
 # --------------------------------
 

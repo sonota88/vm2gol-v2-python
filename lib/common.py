@@ -6,6 +6,9 @@ def puts_e(arg):
 def inspect(arg):
     return pformat(arg, indent=4)
 
+def p_e(arg):
+    puts_e(inspect(arg))
+
 def read_stdin_all():
     str = ""
     while True:
