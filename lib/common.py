@@ -1,5 +1,8 @@
 import sys
 
+def puts_e(arg):
+    print(arg, file=sys.stderr)
+
 def read_stdin_all():
     str = ""
     while True:

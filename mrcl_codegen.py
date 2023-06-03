@@ -3,10 +3,7 @@ import re
 import sys
 from pprint import pformat
 
-from lib.common import read_stdin_all
-
-def puts_e(arg):
-    print(arg, file=sys.stderr)
+from lib.common import read_stdin_all, puts_e
 
 def inspect(arg):
     return pformat(arg, indent=4)
