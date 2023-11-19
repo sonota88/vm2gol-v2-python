@@ -45,7 +45,7 @@ def _gen_expr_add():
 def _gen_expr_mult():
     print("  pop reg_b")
     print("  pop reg_a")
-    print("  mult_ab")
+    print("  mul")
 
 def _gen_expr_eq_neq(name, then_val, else_val):
     label_id = get_label_id()
