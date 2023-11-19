@@ -142,6 +142,10 @@ def gen_return(fn_arg_names, lvar_names, stmt):
     retval = stmt[1]
     gen_expr(fn_arg_names, lvar_names, retval)
 
+    print("")
+    asm_epilogue()
+    print("  ret")
+
 def _gen_set(fn_arg_names, lvar_names, dest, expr):
     gen_expr(fn_arg_names, lvar_names, expr)
     src_val = "reg_a"
