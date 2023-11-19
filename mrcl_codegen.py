@@ -21,10 +21,10 @@ def get_label_id():
 
 def asm_prologue():
     print("  push bp")
-    print("  cp sp bp")
+    print("  mov sp bp")
 
 def asm_epilogue():
-    print("  cp bp sp")
+    print("  mov bp sp")
     print("  pop bp")
 
 def to_fn_arg_disp(fn_arg_names, fn_arg_name):
@@ -59,11 +59,11 @@ def _gen_expr_eq_neq(name, then_val, else_val):
     print(f"  compare")
     print(f"  jump_eq {label_then}")
 
-    print(f"  cp {else_val} reg_a")
+    print(f"  mov {else_val} reg_a")
     print(f"  jump {label_end}")
 
     print(f"label {label_then}")
-    print(f"  cp {then_val} reg_a")
+    print(f"  mov {then_val} reg_a")
 
     print(f"label {label_end}")
 
@@ -75,14 +75,14 @@ def _gen_expr_neq():
 
 def gen_expr(fn_arg_names, lvar_names, expr):
     if type(expr) == int:
-        print(f"  cp {expr} reg_a")
+        print(f"  mov {expr} reg_a")
     elif type(expr) == str:
         if expr in fn_arg_names:
             disp = to_fn_arg_disp(fn_arg_names, expr)
-            print(f"  cp [bp:{disp}] reg_a")
+            print(f"  mov [bp:{disp}] reg_a")
         elif expr in lvar_names:
             disp = to_lvar_addr(lvar_names, expr)
-            print(f"  cp [bp:{disp}] reg_a")
+            print(f"  mov [bp:{disp}] reg_a")
         else:
             raise not_yet_impl("expr", expr)
     elif type(expr) == list:
@@ -136,7 +136,7 @@ def gen_call_set(fn_arg_names, lvar_names, stmt):
     _gen_funcall(fn_arg_names, lvar_names, funcall)
 
     disp = to_lvar_addr(lvar_names, lvar_name)
-    print(f"  cp reg_a [bp:{disp}]")
+    print(f"  mov reg_a [bp:{disp}]")
 
 def gen_return(fn_arg_names, lvar_names, stmt):
     retval = stmt[1]
@@ -152,7 +152,7 @@ def _gen_set(fn_arg_names, lvar_names, dest, expr):
 
     if dest in lvar_names:
         disp = to_lvar_addr(lvar_names, dest)
-        print(f"  cp {src_val} [bp:{disp}]")
+        print(f"  mov {src_val} [bp:{disp}]")
     else:
         raise not_yet_impl("dest", dest)
 
@@ -177,7 +177,7 @@ def gen_while(fn_arg_names, lvar_names, stmt):
 
     gen_expr(fn_arg_names, lvar_names, cond_expr)
 
-    print(f"  cp 0 reg_b")
+    print(f"  mov 0 reg_b")
     print(f"  compare")
 
     print(f"  jump_eq {label_end}")
@@ -203,7 +203,7 @@ def gen_case(fn_arg_names, lvar_names, stmt):
 
         gen_expr(fn_arg_names, lvar_names, cond)
 
-        print(f"  cp 0 reg_b")
+        print(f"  mov 0 reg_b")
         print(f"  compare")
         print(f"  jump_eq {label_end_when_head}_{when_idx}")
 
