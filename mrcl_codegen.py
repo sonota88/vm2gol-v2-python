@@ -123,7 +123,7 @@ def _gen_funcall(fn_arg_names, lvar_names, funcall):
 
     gen_vm_comment(f"call  {fn_name}")
     print(f"  call {fn_name}")
-    print(f"  add_sp {len(fn_args)}")
+    print(f"  add sp {len(fn_args)}")
 
 def gen_call(fn_arg_names, lvar_names, stmt):
     funcall = stmt[1]
@@ -248,7 +248,7 @@ def gen_stmts(fn_arg_names, lvar_names, stmts):
         gen_stmt(fn_arg_names, lvar_names, stmt)
 
 def gen_var(fn_arg_names, lvar_names, stmt):
-    print("  add_sp -1")
+    print("  add sp -1")
     if len(stmt) == 3:
         dest = stmt[1]
         expr = stmt[2]
