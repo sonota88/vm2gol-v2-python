@@ -40,7 +40,7 @@ def to_lvar_addr(lvar_names, lvar_name):
 def _gen_expr_add():
     print("  pop reg_b")
     print("  pop reg_a")
-    print("  add")
+    print("  add reg_a reg_b")
 
 def _gen_expr_mult():
     print("  pop reg_b")
