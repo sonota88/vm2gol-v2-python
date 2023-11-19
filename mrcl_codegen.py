@@ -126,7 +126,7 @@ def _gen_funcall(fn_arg_names, lvar_names, funcall):
     print(f"  add_sp {len(fn_args)}")
 
 def gen_call(fn_arg_names, lvar_names, stmt):
-    funcall = stmt[1:]
+    funcall = stmt[1]
     _gen_funcall(fn_arg_names, lvar_names, funcall)
 
 def gen_call_set(fn_arg_names, lvar_names, stmt):

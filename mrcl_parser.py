@@ -224,7 +224,7 @@ def parse_call():
 
     consume(";")
 
-    return ["call", *funcall]
+    return ["call", funcall]
 
 def parse_call_set():
     global pos
