@@ -1,5 +1,7 @@
 import sys
 
+from pprint import pformat
+
 def puts_e(arg):
     print(arg, file=sys.stderr)
 
