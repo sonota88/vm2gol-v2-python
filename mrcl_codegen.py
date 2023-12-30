@@ -57,7 +57,7 @@ def _gen_expr_eq_neq(name, then_val, else_val):
     print(f"  pop reg_a")
 
     print(f"  compare")
-    print(f"  jump_eq {label_then}")
+    print(f"  je {label_then}")
 
     print(f"  mov reg_a {else_val}")
     print(f"  jmp {label_end}")
@@ -180,7 +180,7 @@ def gen_while(fn_arg_names, lvar_names, stmt):
     print(f"  mov reg_b 0")
     print(f"  compare")
 
-    print(f"  jump_eq {label_end}")
+    print(f"  je {label_end}")
 
     gen_stmts(fn_arg_names, lvar_names, stmts)
     print(f"  jmp {label_begin}")
@@ -205,7 +205,7 @@ def gen_case(fn_arg_names, lvar_names, stmt):
 
         print(f"  mov reg_b 0")
         print(f"  compare")
-        print(f"  jump_eq {label_end_when_head}_{when_idx}")
+        print(f"  je {label_end_when_head}_{when_idx}")
 
         gen_stmts(fn_arg_names, lvar_names, stmts)
 
