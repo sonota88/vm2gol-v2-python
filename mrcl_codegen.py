@@ -60,7 +60,7 @@ def _gen_expr_eq_neq(name, then_val, else_val):
     print(f"  jump_eq {label_then}")
 
     print(f"  mov reg_a {else_val}")
-    print(f"  jump {label_end}")
+    print(f"  jmp {label_end}")
 
     print(f"label {label_then}")
     print(f"  mov reg_a {then_val}")
@@ -183,7 +183,7 @@ def gen_while(fn_arg_names, lvar_names, stmt):
     print(f"  jump_eq {label_end}")
 
     gen_stmts(fn_arg_names, lvar_names, stmts)
-    print(f"  jump {label_begin}")
+    print(f"  jmp {label_begin}")
     print(f"label {label_end}")
     print("")
 
@@ -209,7 +209,7 @@ def gen_case(fn_arg_names, lvar_names, stmt):
 
         gen_stmts(fn_arg_names, lvar_names, stmts)
 
-        print(f"  jump {label_end}")
+        print(f"  jmp {label_end}")
 
         print(f"label {label_end_when_head}_{when_idx}")
 
