@@ -19,6 +19,10 @@ def read_stdin_all():
         str += line
     return str
 
+def file_read(path):
+    with open(path) as f:
+        return f.read()
+
 class Token:
     def __init__(self, kind, value, lineno):
         self.kind = kind
