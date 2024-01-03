@@ -28,3 +28,10 @@ cd vm2gol-v2-python
 
 ./test.sh all
 ```
+
+
+# Compile and run game of life
+
+```
+./run_game_of_life.sh
+```
