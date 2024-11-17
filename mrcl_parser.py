@@ -3,18 +3,12 @@ import json, sys
 from lib.common import Token
 from lib.common import read_stdin_all, puts_e, inspect, p_e
 
-def to_json(data):
-    return json.dumps(data, indent=2)
-
-def parse_json(json_):
-    return json.loads(json_)
-
 def read_tokens(src):
     tokens = []
 
     for line in src.split("\n"):
         if line != "":
-            parts = parse_json(line)
+            parts = json.loads(line)
             tokens.append(Token(parts[1], parts[2], parts[0]))
 
     return tokens
@@ -366,4 +360,5 @@ tokens = read_tokens(src)
 
 tree = parse()
 
-print(to_json(tree))
+print(json.dumps(tree, indent=2))
+
