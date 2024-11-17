@@ -24,6 +24,10 @@ def not_yet_impl(k, v):
 def parse_error(val=None):
     return Exception("parse error " + inspect(val))
 
+def bump():
+    global pos
+    pos += 1
+
 def is_end():
     return len(tokens) <= pos
 
@@ -53,18 +57,14 @@ def assert_value(pos, exp):
         raise Exception(msg)
 
 def consume(s):
-    global pos
-
     assert_value(pos, s)
-    pos += 1
+    bump()
 
 # --------------------------------
 
 def _parse_arg():
-    global pos
-
     t = peek()
-    pos += 1
+    bump()
     return t.get_value()
 
 def parse_args():
@@ -82,12 +82,10 @@ def parse_args():
     return args
 
 def parse_func():
-    global pos
-
     consume("func")
 
     t = peek()
-    pos += 1
+    bump()
     func_name = t.value
 
     consume("(")
@@ -108,10 +106,8 @@ def parse_func():
     return ["func", func_name, args, stmts]
 
 def _parse_var_declare():
-    global pos
-
     t = peek()
-    pos += 1
+    bump()
     var_name = t.value
 
     consume(";")
@@ -119,10 +115,8 @@ def _parse_var_declare():
     return ["var", var_name]
 
 def _parse_var_init():
-    global pos
-
     t = peek()
-    pos += 1
+    bump()
     var_name = t.value
 
     consume("=")
@@ -146,12 +140,10 @@ def parse_var():
         raise parse_error(f"unexpected token ({t})")
 
 def _parse_expr_factor():
-    global pos
-
     t = peek()
 
     if t.kind == "int" or t.kind == "ident":
-        pos += 1
+        bump()
         return t.get_value()
     elif t.kind == "sym":
         consume("(")
@@ -165,13 +157,11 @@ def is_binop(t):
     return t.value in ["+", "*", "==", "!="]
 
 def parse_expr():
-    global pos
-
     expr = _parse_expr_factor()
 
     while(is_binop(peek())):
         op = peek().value
-        pos += 1
+        bump()
 
         factor = _parse_expr_factor()
         expr = [op, expr, factor]
@@ -180,12 +170,10 @@ def parse_expr():
 
 
 def parse_set():
-    global pos
-
     consume("set")
 
     t = peek()
-    pos += 1
+    bump()
     var_name = t.value
 
     consume("=")
@@ -197,10 +185,8 @@ def parse_set():
     return ["set", var_name, expr]
 
 def parse_funcall():
-    global pos
-
     t = peek()
-    pos += 1
+    bump()
     func_name = t.value
 
     consume("(")
@@ -219,12 +205,10 @@ def parse_call():
     return ["call", funcall]
 
 def parse_call_set():
-    global pos
-
     consume("call_set")
 
     t = peek()
-    pos += 1
+    bump()
     var_name = t.value
 
     consume("=")
@@ -279,13 +263,11 @@ def parse_case():
     return ["case", *when_clauses]
 
 def parse_vm_comment():
-    global pos
-
     consume("_cmt")
     consume("(")
 
     t = peek()
-    pos += 1
+    bump()
     comment = t.value
 
     consume(")")
