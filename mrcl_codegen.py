@@ -89,7 +89,7 @@ def gen_expr(fn_arg_names, lvar_names, expr):
 
 def _gen_expr_binary(fn_arg_names, lvar_names, expr):
     operator = expr[0]
-    args = expr[1:]
+    args     = expr[1:]
 
     arg_l = args[0]
     arg_r = args[1]
@@ -128,7 +128,7 @@ def gen_call(fn_arg_names, lvar_names, stmt):
 
 def gen_call_set(fn_arg_names, lvar_names, stmt):
     lvar_name = stmt[1]
-    funcall = stmt[2]
+    funcall   = stmt[2]
 
     _gen_funcall(fn_arg_names, lvar_names, funcall)
 
@@ -161,7 +161,7 @@ def gen_set(fn_arg_names, lvar_names, stmt):
 
 def gen_while(fn_arg_names, lvar_names, stmt):
     cond_expr = stmt[1]
-    stmts = stmt[2]
+    stmts     = stmt[2]
 
     label_id = get_label_id()
 
@@ -194,7 +194,7 @@ def gen_case(fn_arg_names, lvar_names, stmt):
 
     for when_clause in when_clauses:
         when_idx += 1
-        cond = when_clause[0]
+        cond  = when_clause[0]
         stmts = when_clause[1:]
         print(f"  # 条件 {label_id}_{when_idx}: {cond}")
 
@@ -252,9 +252,9 @@ def gen_var(fn_arg_names, lvar_names, stmt):
         _gen_set(fn_arg_names, lvar_names, dest, expr)
 
 def gen_func_def(func_def):
-    fn_name = func_def[1]
+    fn_name      = func_def[1]
     fn_arg_names = func_def[2]
-    stmts = func_def[3]
+    stmts        = func_def[3]
 
     print("")
     print(f"label {fn_name}")

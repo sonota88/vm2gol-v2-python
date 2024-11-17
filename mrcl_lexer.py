@@ -43,25 +43,25 @@ def tokenize(src):
         elif re.match(re_str, rest):
             m = re.match(re_str, rest)
             s = m.group(1)
-            tokens.append( Token("str", s, lineno) )
+            tokens.append(Token("str", s, lineno))
             pos += len(s) + 2
         elif re.match(re_int, rest):
             m = re.match(re_int, rest)
             s = m.group(1)
-            tokens.append( Token("int", s, lineno) )
+            tokens.append(Token("int", s, lineno))
             pos += len(s)
         elif re.match(re_sym, rest):
             m = re.match(re_sym, rest)
             s = m.group(1)
-            tokens.append( Token("sym", s, lineno) )
+            tokens.append(Token("sym", s, lineno))
             pos += len(s)
         elif re.match(re_ident, rest):
             m = re.match(re_ident, rest)
             s = m.group(1)
             if is_kw(s):
-                tokens.append( Token("kw", s, lineno) )
+                tokens.append(Token("kw", s, lineno))
             else:
-                tokens.append( Token("ident", s, lineno) )
+                tokens.append(Token("ident", s, lineno))
             pos += len(s)
         else:
             raise not_yet_impl("rest", rest)
