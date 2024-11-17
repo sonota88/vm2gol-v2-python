@@ -263,7 +263,7 @@ def gen_func_def(func_def):
     print("")
     print("  # 関数の処理本体")
 
-    lvar_names = []
+    lvar_names = [] # local variable names
 
     for stmt in stmts:
         stmt_head = stmt[0]
