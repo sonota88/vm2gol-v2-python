@@ -28,7 +28,7 @@ def to_fn_arg_disp(fn_arg_names, fn_arg_name):
     i = fn_arg_names.index(fn_arg_name)
     return i + 2
 
-def to_lvar_addr(lvar_names, lvar_name):
+def to_lvar_disp(lvar_names, lvar_name):
     i = lvar_names.index(lvar_name)
     return -(i + 1)
 
@@ -78,7 +78,7 @@ def gen_expr(fn_arg_names, lvar_names, expr):
             disp = to_fn_arg_disp(fn_arg_names, expr)
             print(f"  mov reg_a [bp:{disp}]")
         elif expr in lvar_names:
-            disp = to_lvar_addr(lvar_names, expr)
+            disp = to_lvar_disp(lvar_names, expr)
             print(f"  mov reg_a [bp:{disp}]")
         else:
             raise not_yet_impl("expr", expr)
@@ -132,7 +132,7 @@ def gen_call_set(fn_arg_names, lvar_names, stmt):
 
     _gen_funcall(fn_arg_names, lvar_names, funcall)
 
-    disp = to_lvar_addr(lvar_names, lvar_name)
+    disp = to_lvar_disp(lvar_names, lvar_name)
     print(f"  mov [bp:{disp}] reg_a")
 
 def gen_return(fn_arg_names, lvar_names, stmt):
@@ -148,7 +148,7 @@ def _gen_set(fn_arg_names, lvar_names, dest, expr):
     src_val = "reg_a"
 
     if dest in lvar_names:
-        disp = to_lvar_addr(lvar_names, dest)
+        disp = to_lvar_disp(lvar_names, dest)
         print(f"  mov [bp:{disp}] {src_val}")
     else:
         raise not_yet_impl("dest", dest)
