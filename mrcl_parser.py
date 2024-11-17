@@ -310,9 +310,7 @@ def parse_debug():
 def parse_stmt():
     t = peek()
 
-    if t.value == "when": # case の場合に出現
-        return None
-    elif t.value == "set":
+    if t.value == "set":
         return parse_set()
     elif t.value == "call":
         return parse_call()
@@ -365,9 +363,7 @@ def parse():
 
 src = read_stdin_all()
 tokens = read_tokens(src)
-# p_e(tokens)
 
 tree = parse()
-# p_e(tree)
 
 print(to_json(tree))
