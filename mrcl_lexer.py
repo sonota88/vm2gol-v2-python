@@ -1,6 +1,4 @@
-import json
-import re
-import sys
+import json, re, sys
 
 from lib.common import Token
 from lib.common import read_stdin_all
@@ -12,17 +10,8 @@ def to_json(token):
 
 def is_kw(value):
     return value in [
-        "func",
-        "set",
-        "var",
-        "call_set",
-        "call",
-        "return",
-        "case",
-        "when",
-        "while",
-        "_cmt",
-        "_debug"
+        "func", "return", "var", "set", "call", "call_set", "case", "when", "while",
+        "_cmt", "_debug"
     ]
 
 def tokenize(src):

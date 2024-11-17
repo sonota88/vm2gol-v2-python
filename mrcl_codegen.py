@@ -1,6 +1,4 @@
-import json
-import re
-import sys
+import json, re, sys
 
 from lib.common import read_stdin_all, puts_e, inspect, p_e
 

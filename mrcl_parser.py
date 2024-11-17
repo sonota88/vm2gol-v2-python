@@ -1,5 +1,4 @@
-import json
-import sys
+import json, sys
 
 from lib.common import Token
 from lib.common import read_stdin_all, puts_e, inspect, p_e
