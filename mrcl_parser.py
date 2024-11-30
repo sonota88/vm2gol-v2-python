@@ -87,13 +87,10 @@ def parse_args():
 
 def parse_func():
     consume("func")
-
     func_name = peek_and_next().value
-
     consume("(")
     args = parse_args()
     consume(")")
-
     consume("{")
 
     stmts = []
@@ -109,18 +106,14 @@ def parse_func():
 
 def _parse_var_declare():
     var_name = peek_and_next().value
-
     consume(";")
 
     return ["var", var_name]
 
 def _parse_var_init():
     var_name = peek_and_next().value
-
     consume("=")
-
     expr = parse_expr()
-
     consume(";")
 
     return ["var", var_name, expr]
@@ -129,7 +122,6 @@ def parse_var():
     consume("var")
 
     t = peek(1)
-
     if t.value == ";":
         return _parse_var_declare()
     elif t.value == "=":
@@ -139,7 +131,6 @@ def parse_var():
 
 def _parse_expr_factor():
     t = peek()
-
     if t.kind == "int" or t.kind == "ident":
         return peek_and_next().get_value()
     elif t.kind == "sym":
@@ -158,7 +149,6 @@ def parse_expr():
 
     while(is_binop(peek())):
         op = peek_and_next().value
-
         factor = _parse_expr_factor()
         expr = [op, expr, factor]
 
@@ -167,20 +157,15 @@ def parse_expr():
 
 def parse_set():
     consume("set")
-
     var_name = peek_and_next().value
-
     consume("=")
-
     expr = parse_expr()
-
     consume(";")
 
     return ["set", var_name, expr]
 
 def parse_funcall():
     func_name = peek_and_next().value
-
     consume("(")
     args = parse_args()
     consume(")")
@@ -189,29 +174,22 @@ def parse_funcall():
 
 def parse_call():
     consume("call")
-
     funcall = parse_funcall()
-
     consume(";")
 
     return ["call", funcall]
 
 def parse_call_set():
     consume("call_set")
-
     var_name = peek_and_next().value
-
     consume("=")
-
     funcall = parse_funcall()
-
     consume(";")
 
     return ["call_set", var_name, funcall]
 
 def parse_return():
     consume("return")
-
     expr = parse_expr()
     consume(";")
 
@@ -219,11 +197,9 @@ def parse_return():
 
 def parse_while():
     consume("while")
-
     consume("(")
     expr = parse_expr()
     consume(")")
-
     consume("{")
     stmts = parse_stmts()
     consume("}")
@@ -235,7 +211,6 @@ def _parse_when_clause():
     consume("(")
     expr = parse_expr()
     consume(")")
-
     consume("{")
     stmts = parse_stmts()
     consume("}")
@@ -246,7 +221,6 @@ def parse_case():
     consume("case")
 
     when_clauses = []
-
     while peek().value == "when":
         when_clauses.append(_parse_when_clause())
 
@@ -255,9 +229,7 @@ def parse_case():
 def parse_vm_comment():
     consume("_cmt")
     consume("(")
-
     comment = peek_and_next().value
-
     consume(")")
     consume(";")
 
@@ -273,7 +245,6 @@ def parse_debug():
 
 def parse_stmt():
     t = peek()
-
     if t.value == "set":
         return parse_set()
     elif t.value == "call":
@@ -295,7 +266,6 @@ def parse_stmt():
 
 def parse_stmts():
     stmts = []
-
     while peek().value != "}":
         stmts.append(parse_stmt())
 
