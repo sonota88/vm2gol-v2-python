@@ -37,6 +37,11 @@ def peek(offset = 0):
 
     return tokens[pos + offset]
 
+def peek_and_next():
+    t = peek()
+    bump()
+    return t
+
 def rest_head():
     return list(
         map(lambda t: f"{t.kind}<{t.value}>", (
@@ -63,8 +68,7 @@ def consume(s):
 # --------------------------------
 
 def _parse_arg():
-    t = peek()
-    bump()
+    t = peek_and_next()
     return t.get_value()
 
 def parse_args():
@@ -84,9 +88,7 @@ def parse_args():
 def parse_func():
     consume("func")
 
-    t = peek()
-    bump()
-    func_name = t.value
+    func_name = peek_and_next().value
 
     consume("(")
     args = parse_args()
@@ -106,18 +108,14 @@ def parse_func():
     return ["func", func_name, args, stmts]
 
 def _parse_var_declare():
-    t = peek()
-    bump()
-    var_name = t.value
+    var_name = peek_and_next().value
 
     consume(";")
 
     return ["var", var_name]
 
 def _parse_var_init():
-    t = peek()
-    bump()
-    var_name = t.value
+    var_name = peek_and_next().value
 
     consume("=")
 
@@ -143,8 +141,7 @@ def _parse_expr_factor():
     t = peek()
 
     if t.kind == "int" or t.kind == "ident":
-        bump()
-        return t.get_value()
+        return peek_and_next().get_value()
     elif t.kind == "sym":
         consume("(")
         expr = parse_expr()
@@ -160,8 +157,7 @@ def parse_expr():
     expr = _parse_expr_factor()
 
     while(is_binop(peek())):
-        op = peek().value
-        bump()
+        op = peek_and_next().value
 
         factor = _parse_expr_factor()
         expr = [op, expr, factor]
@@ -172,9 +168,7 @@ def parse_expr():
 def parse_set():
     consume("set")
 
-    t = peek()
-    bump()
-    var_name = t.value
+    var_name = peek_and_next().value
 
     consume("=")
 
@@ -185,9 +179,7 @@ def parse_set():
     return ["set", var_name, expr]
 
 def parse_funcall():
-    t = peek()
-    bump()
-    func_name = t.value
+    func_name = peek_and_next().value
 
     consume("(")
     args = parse_args()
@@ -207,9 +199,7 @@ def parse_call():
 def parse_call_set():
     consume("call_set")
 
-    t = peek()
-    bump()
-    var_name = t.value
+    var_name = peek_and_next().value
 
     consume("=")
 
@@ -266,9 +256,7 @@ def parse_vm_comment():
     consume("_cmt")
     consume("(")
 
-    t = peek()
-    bump()
-    comment = t.value
+    comment = peek_and_next().value
 
     consume(")")
     consume(";")
