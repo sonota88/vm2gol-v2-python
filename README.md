@@ -6,13 +6,13 @@ https://memo88.hatenablog.com/entry/2020/08/19/065056
 ```sh
   $ LANG=C wc -l mrcl_{lexer,parser,codegen}.py lib/common.py
    75 mrcl_lexer.py
-  346 mrcl_parser.py
+  304 mrcl_parser.py
   327 mrcl_codegen.py
    44 lib/common.py
-  792 total
+  750 total
 
   $ cat mrcl_{lexer,parser,codegen}.py lib/common.py | grep -v '^ *#' | wc -l
-785
+743
 ```
 
 ```
